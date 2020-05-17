@@ -1,36 +1,18 @@
 <?php
-  if ($_GET["value"]) {
+  if (isset($_GET["value"])) {
       $email = $_GET["value"];
       $findme = "/";
-      $tamanio = strlen($email);
       $pos = strpos($email, $findme);
       $partcorreo = substr($email,0,$pos);
 
       echo "$partcorreo";
-  }
+      echo "<br/> PROBANDO";
+      //$porcentaje = $_SESSION["semana"]*100/17;
+      $porcentaje = 17*100/17;
+      (isset($rpta)? $rpta = 24 : $rpta = number_format($porcentaje));
+
+      require_once("vista/cabecera.php");
  ?>
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-
- <meta charset="utf-8">
- <meta http-equiv="X-UA-Compatible" content="IE=edge">
- <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
- <meta name="description" content="">
- <meta name="author" content="">
-
- <title>Registro Silabico</title>
-
- <!-- Custom fonts for this template-->
- <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
- <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
-
- <!-- Custom styles for this template-->
- <link href="css/sb-admin-2.min.css" rel="stylesheet">
-
-</head>
-
 <body class="bg-gradient-primary login-body">
 
  <div class="login-container">
@@ -46,12 +28,84 @@
            <div class="row">
              <!-- informacion derecha -->
              <div class="col-lg-12 text-white">
-                 <div class="text-center">
-                   <p class="login-text-title mb-4">Estimado(a) docente por favor ingrese su cuenta de correo institucional y su contraseña:</p>
-                 </div>
-                 <div class="form-group">
-                     <input type="submit" class="btn btn-primary btn-user btn-block" value="Registrar" data-toggle='modal' data-target='#modalLoginForm'>
-                 </div>
+               <form method="POST" action="temaregistrado.php">
+                  <div class="docente-card text-white mb-3">
+                    <div class="card-body">
+                      <h3 class="card-title text-center">Registro Silábico</h3>
+                        <div class="row h-100 text-center">
+                            <div class="col-md-12 my-auto">
+                                <table class="table table-sm text-uppercase table-info-asistencia">
+                                    <tbody>
+                                        <tr>
+                                           <th scope="row">Docente</th>
+                                           <td><b><?= (isset($_SESSION["nombre"])? $_SESSION["nombre"]:"No hay información"); ?></b></td>
+                                        </tr>
+                                        <tr>
+                                          <th scope="row">Facultad</th>
+                                          <td><?= (isset($_SESSION["facultadCab"])? $_SESSION["facultadCab"]:"No hay información"); ?></td>
+                                        </tr>
+                                        <tr>
+                                          <th scope="row">Programa Profesional</th>
+                                          <td><?= (isset($_SESSION["escuelaCab"])? $_SESSION["escuelaCab"] :"No hay información"); ?></td>
+                                        </tr>
+                                        <tr>
+                                          <th scope="row">Curso</th>
+                                          <td class="h5"><b><?= (isset($_SESSION["asignaturaCab"])? $_SESSION["asignaturaCab"]:"No hay información"); ?></b></td>
+                                        </tr>
+                                        <tr>
+                                          <th scope="row">Código del Curso</th>
+                                          <td><?= (isset($_SESSION["codasignaturaCAb"])? $_SESSION["codasignaturaCAb"]:"No hay información"); ?></td>
+                                        </tr>
+                                        <tr>
+                                          <th scope="row">Grupo del Curso</th>
+                                          <td><?= (isset($_SESSION["grupo"])? $_SESSION["grupo"]:"No hay información"); ?></td>
+                                        </tr>
+                                        <tr>
+                                          <th scope="row">Aula</th>
+                                          <td><?= (isset($_SESSION["aula"])? $_SESSION["aula"]:"No hay información"); ?></td>
+                                        </tr>
+                                        <tr>
+                                          <th scope="row">Semana</th>
+                                          <td><?php $semanas=date("W"); $_SESSION["semana"]= $semanas -16;  echo (isset($_SESSION["semana"])? $_SESSION["semana"]:"No hay información"); ?></td>
+                                        </tr>
+                                        <tr>
+                                          <th scope="row">Tema de avance</th>
+                                          <td>
+                                            <input name="temasilabico" class="form-control" type="text" placeholder="Ingrese el tema..."
+                                                   data-toggle='modal' data-target='#modalTemaSilabico' data-backdrop="static" data-keyboard="false" required>
+                                          </td>
+                                        </tr>
+                                        <tr>
+                                          <th scope="row">% de Avance a la fecha</th>
+                                          <td>
+                                            <div class="progress progress-md mb-2">
+                                              <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: <?= $rpta?>" >
+                                              <?php
+                                                echo (isset($rpta)? $rpta.' %':"No hay información");
+                                                $_SESSION["porcentaje"]  = $rpta;
+                                              ?>
+                                              </div>
+                                            </div>
+                                          </td>
+                                        </tr>
+                                        <?php if(!isset($_POST["enviar"]) ): ?>
+                                            <tr>
+                                              <th scope="row"></th>
+                                              <td>
+                                                <input type="hidden" class="form-control" name="enviar" value="guardadoCabe">
+                                                <button type="submit" class="btn btn-success col-md-12" name="guardarCab" id="saveCab" style="margin-top:15px;">
+                                                        <i class="fas fa-fw fa-check"></i> Guardar Avance
+                                                </button>
+                                              </td>
+                                            </tr>
+                                        <?php endif; ?>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    </div>
+                </form>
              </div>
            </div>
          </div>
@@ -60,50 +114,49 @@
    </div>
  </div>
 
- <!-- Modal -->
-        <div class="modal fade modalExportarAsistencia" id="modalLoginForm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+ <!-- Modal de Temas-->
+        <div class="modal fade modalExportarAsistencia" id="modalTemaSilabico" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
              aria-hidden="true">
              <div class="modal-dialog" role="document">
                  <div class="modal-content">
-                 <div class="modal-header text-center">
-                     <h4 class="modal-title w-100 font-weight-bold">Seleccione fecha de inicio y fecha de fin del reporte</h4>
-                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                     <span aria-hidden="true">&times;</span>
-                     </button>
-                 </div>
-                 <form method="POST">
-                 <div class="modal-body mx-3">
-                     <div class="md-form mb-5 exportar-form">
-                         <i class="fas fa-calendar col-md-2 fa-2x prefix grey-text"></i>
-                         <input type="text" class="form-control col-md-9" name="daterange" value="08/08/2019 - 08/08/2019" />
+                     <div class="modal-header text-center">
+                         <h4 class="modal-title w-100 font-weight-bold"><i class="fas fa-file col-md-2 fa-1x prefix grey-text"></i>Seleccione Su Tema Silábico</h4>
+                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                         <span aria-hidden="true">&times;</span>
+                         </button>
                      </div>
-
-                 </div>
-                 <div class="modal-footer d-flex justify-content-center">
-                 <form action="" method="post">
-                 <button type="submit" id="btnExport" name='export'
-                     value="Export to Excel" class="btn btn-success"><a style="color: #fff;">Exportar a Excel</a></button>
-                 </form>
-                 <!--
-                 <button class="btn btn-danger"><a style="color: #fff;">Cancelar</a></button>
-                 <button class="btn btn-success"><a style="color: #fff;">Exportar</a></button>
-                 -->
-                 </div>
-                 </form>
+                     <form method="post">
+                         <div class="modal-body mx-3">
+                             <div class="md-form mb-5 exportar-form">
+                                 <select multiple name="Temasilabico[]">
+                                    <option value="Red" disabled>Tema 1</option>
+                                    <option value="Green" disabled>Tema 2</option>
+                                    <option value="Blue" disabled>Tema 3</option>
+                                    <option value="Pink">tema 4</option>
+                                    <option value="Yellow">Tema 5</option>
+                                    <option value="White">Tema 6</option>
+                                    <option value="Black">Tema 7</option>
+                                    <option value="Violet">Tema 8</option>
+                                    <option value="Limegreen">Tema 9</option>
+                                    <option value="Brown">Tema 10</option>
+                                  </select>
+                             </div>
+                         </div>
+                         <div class="modal-footer d-flex justify-content-center">
+                             <button type="submit" id="btnGuardarTema" name='btnGuardarTema'
+                                     value="Guardar Tema" class="btn btn-success"><a style="color: #fff;">Tema Seleccionado</a>
+                             </button>
+                         </div>
+                     </form>
                  </div>
              </div>
           </div>
+  <!--FIN Modal de Temas-->
 
- <!-- Bootstrap core JavaScript-->
- <script src="vendor/jquery/jquery.min.js"></script>
- <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
- <!-- Core plugin JavaScript-->
- <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
-
- <!-- Custom scripts for all pages-->
- <script src="js/sb-admin-2.min.js"></script>
-
-</body>
-
-</html>
+<?php
+  require_once("vista/footer.php");
+}else{
+  header("Location:http://190.119.145.175/miaula");
+}
+?>
