@@ -5,89 +5,6 @@ require_once("Asistencia.php");
 
 class Usuario extends Conectar {
 
-        public function login(){
-            $conectar=parent::conexion();
-            parent::set_names();
-
-            if(isset($_POST["enviar"])){
-
-                //INICIO DE VALIDACIONES
-                $correo = $_POST["correo"];
-                $password = $_POST["password"];
-
-                $findme = "@";
-                $defaul = "@unsa.edu.pe";
-                $tamanio = strlen($correo);
-                $pos = strpos($correo, $findme);
-                $partcorreo = substr($correo,$pos,$tamanio-1);
-
-
-                if(empty($correo) and empty($password)){
-                    header("Location:".Conectar::ruta()."index.php");
-                    exit();
-                }
-                else{
-                    if($partcorreo === $defaul){
-                        $sql= "SELECT * FROM usuarios WHERE correo = ? and dni=?";
-
-                        $sql=$conectar->prepare($sql);
-
-                        $sql->bindValue(1, $correo);
-                        $sql->bindValue(2, $password);
-                        $sql->execute();
-                        $resultado = $sql->fetch();
-
-                        //si existe el registro entonces se conecta en session
-                        if(is_array($resultado) and count($resultado)>0){
-                            /*IMPORTANTE: la session guarda los valores de los campos de la tabla de la bd*/
-                            $_SESSION["codasignatura"] = $resultado["codasig"];
-                            $_SESSION["correo"] = $resultado["correo"];
-                            $_SESSION["nombre"] = $resultado["nombres"];
-                            $_SESSION["escuela"] = $resultado["escuela"];
-                            $_SESSION["tipo"] = $resultado["tipo"];
-                            $_SESSION["estadopass"] = $resultado["estadopass"];
-
-                            self::getCabeceraAsistencia();
-                            $asis =new Asistencia();
-
-                            $id_cabecera = $asis->getIdCabecera($_SESSION["correo"], $_SESSION["codasignaturaCAb"], $_SESSION["grupo"]);
-                            $rowcabecera = $asis->get_asistencia_cabecera();
-                            $rowdetalle = $asis->getFilasAsistenciaDetalle($id_cabecera);
-
-                            //var_dump($rowcabecera); //print_r($this->pdo->errorInfo());
-                            //var_dump($rowdetalle); print_r($rowdetalle);
-
-                            if($rowcabecera == 0){//echo $rowcabecera;
-                                header("Location:".Conectar::ruta()."asistencia.php");
-                            }else{
-                                switch ($rowdetalle) {
-                                    case '0':
-                                        //Usar este header si vamos a tomar asistencia de alumnos
-                                        header("Location:".Conectar::ruta()."asistencias.php");
-                                        break;
-                                    default:
-                                        header("Location:".Conectar::ruta()."asistenciaedit.php");
-                                        break;
-                                }
-
-
-                            }
-
-                        }else{
-                            echo "Su usuario o contraseña son incorrectos. Ingrese nuevamente sus datos.";
-                            $_SESSION["exitosologeo"] = "no";
-                            header("Location:".Conectar::ruta()."index.php?m=2");
-                        }
-                    }else{
-                        echo "Su correo tiene que ser Institucional (sucorreo@unsa.edu.pe).";
-                        header("Location:".Conectar::ruta()."index.php?m=1");
-                    }
-
-                }
-            }
-        }
-
-
         public function getEmailMd5($email_md5){
             $conectar=parent::conexion();
             parent::set_names();
@@ -95,7 +12,8 @@ class Usuario extends Conectar {
             $correo = "";
 
             if(empty($email)){
-                header("Location:".Conectar::ruta_aulavirtual());
+                //header("Location:".Conectar::ruta_aulavirtual());
+                echo "el email que llega a la funcion getEmailMd5 esta vacio";
                 exit();
             }else {
                 $sql = "SELECT * FROM `docente_md5` WHERE email_md5 = ?";
@@ -121,27 +39,26 @@ class Usuario extends Conectar {
             $correo = $docente;
             $rpta = false;
             if(empty($correo)){
-                header("Location:".Conectar::ruta());
+                //header("Location:".Conectar::ruta());
+                echo "el correo que llega a la funcion getDatosDocente esta vacio";
                 exit();
             }else{//cambiar la consulta por la de hora now() en el server
                 $sql = "SELECT DISTINCT dutic_matriculados_20.facultad,  dutic_docentes_20.escuela, dutic_matriculados_20.asignatura, dutic_docentes_20.codasig, dutic_docentes_20.grupo,
                   			 dutic_horarios_20.aula, dutic_horarios_20.dia, dutic_horarios_20.hora_ini,dutic_horarios_20.hora_fin, concat(dutic_docentes_20.nombre,' ',dutic_docentes_20.paterno,' ',dutic_docentes_20.materno) as nombres
-
-                  from dutic_matriculados_20, dutic_docentes_20, dutic_horarios_20
-                  WHERE dutic_matriculados_20.codasig=dutic_docentes_20.codasig
-                  and dutic_docentes_20.codasig=dutic_horarios_20.codasig
-                  and dutic_matriculados_20.escuela = dutic_docentes_20.escuela
-                  and dutic_docentes_20.escuela=dutic_horarios_20.escuela
-                  and dutic_matriculados_20.grupo = dutic_docentes_20.grupo
-                  and dutic_docentes_20.grupo=dutic_horarios_20.grupo
-
-                  #and dutic_horarios_20.dia = WEEKDAY(CURDATE())+1
-                  and dutic_horarios_20.dia = 1
-                  and CAST('09:45' AS time)
-                  #and  time (NOW())
-                  BETWEEN CAST(dutic_horarios_20.hora_ini AS time) AND DATE_SUB(CAST(dutic_horarios_20.hora_fin AS time), INTERVAL 1 MINUTE)
-                  and dutic_docentes_20.correo = ?
-                  ORDER BY dutic_docentes_20.escuela, dutic_horarios_20.dia, dutic_horarios_20.hora_ini";
+                        from dutic_matriculados_20, dutic_docentes_20, dutic_horarios_20
+                        WHERE dutic_matriculados_20.codasig=dutic_docentes_20.codasig
+                        and dutic_docentes_20.codasig=dutic_horarios_20.codasig
+                        and dutic_matriculados_20.escuela = dutic_docentes_20.escuela
+                        and dutic_docentes_20.escuela=dutic_horarios_20.escuela
+                        and dutic_matriculados_20.grupo = dutic_docentes_20.grupo
+                        and dutic_docentes_20.grupo=dutic_horarios_20.grupo
+                        #and dutic_horarios_20.dia = WEEKDAY(CURDATE())+1
+                        and dutic_horarios_20.dia = 1
+                        and CAST('09:45' AS time)
+                        #and  time (NOW())
+                        BETWEEN CAST(dutic_horarios_20.hora_ini AS time) AND DATE_SUB(CAST(dutic_horarios_20.hora_fin AS time), INTERVAL 1 MINUTE)
+                        and dutic_docentes_20.correo = ?
+                        ORDER BY dutic_docentes_20.escuela, dutic_horarios_20.dia, dutic_horarios_20.hora_ini";
 
                 $sql=$conectar->prepare($sql);
 
@@ -153,7 +70,7 @@ class Usuario extends Conectar {
 
                 switch ($row_cnt) {
                     case '0':
-                        header("Location:".Conectar::ruta()."vista/mensaje.php");
+                        header("Location:".Conectar::ruta()."mensaje.php");
                         break;
                     case '1':
                         $_SESSION["facultadCab"] = $resultado["facultad"];
@@ -168,7 +85,7 @@ class Usuario extends Conectar {
                         $_SESSION["nombreCab"] = $resultado["nombres"];
                         break;
                     default:
-                        header("Location:".Conectar::ruta()."vista/mensaje2.php");
+                        header("Location:".Conectar::ruta()."mensaje.php?op=2");
                         break;
                 }
 

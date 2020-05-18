@@ -9,16 +9,17 @@
       //echo "$emailmd5";
       //echo "<br/> PROBANDO";
       //capturo el email de quien inicia sesion
-      $email = $user_class->getEmailMd5($emailmd5);
+      $email = $user_class->getEmailMd5($email_md5);
       if($email != "nomatch"){
           //echo "$email <br/>";
           $user_class->getDatosDocente($email);
       }else {
-          header("Location:".Conectar::ruta_aulavirtual());
+          //header("Location:".Conectar::ruta_aulavirtual());
+          echo "email es igual nomatch: no existe el email en nuestra base de datos";
       }
 
       $porcentaje = $_SESSION["semana"]*100/17;
-      (isset($rpta)? $rpta = 24 : $rpta = number_format($porcentaje));
+      (isset($rpta)? $rpta = 0 : $rpta = number_format($porcentaje));
 
       require_once("vista/cabecera.php");
  ?>
@@ -103,7 +104,7 @@
                                               <td>
                                                 <input type="hidden" class="form-control" name="enviar" value="guardadoCabe">
                                                 <button type="submit" class="btn btn-success col-md-12" name="guardarCab" id="saveCab" style="margin-top:15px;">
-                                                        <i class="fas fa-fw fa-check"></i> Guardar Avance
+                                                        <i class="fas fa-fw fa-save"></i> Guardar Avance
                                                 </button>
                                               </td>
                                             </tr>
@@ -153,7 +154,8 @@
                          </div>
                          <div class="modal-footer d-flex justify-content-center">
                              <button type="submit" id="btnGuardarTema" name='btnGuardarTema'
-                                     value="Guardar Tema" class="btn btn-success"><a style="color: #fff;">Tema Seleccionado</a>
+                                     value="Guardar Tema" class="btn btn-success">
+                                     <a style="color: #fff;"><i class="fas fa-fw fa-save"></i> Tema Seleccionado</a>
                              </button>
                          </div>
                      </form>

@@ -37,5 +37,8 @@
     h5{
       color: Black;
     }
+    i{
+      color: Black;
+    }
  </style>
 </head>
