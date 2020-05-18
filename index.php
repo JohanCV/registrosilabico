@@ -81,8 +81,13 @@
                                         <tr>
                                           <th scope="row">Tema de avance</th>
                                           <td>
-                                            <input name="temasilabico" class="form-control" type="text" placeholder="Ingrese el tema..."
-                                                   data-toggle='modal' data-target='#modalTemaSilabico' data-backdrop="static" data-keyboard="false" required>
+                                            <!--input name="temasilabico" class="form-control" type="text" placeholder="Ingrese el tema..."
+                                                   data-toggle='modal' data-target='#modalTemaSilabico' data-backdrop="static" data-keyboard="false" required-->
+                                                    <div class="checkbox">
+                                                      <input type="checkbox" name="check_list_tema[]" value="tema1" required><label> Tema 1: Excel</label><br/>
+                                                    </div>
+                                                    <input type="checkbox" name="check_list_tema[]" value="tema2"><label> Tema 2: Java</label><br/>
+                                                    <input type="checkbox" name="check_list_tema[]" value="tema3"><label> Tema 3: PHP</label><br/>
                                           </td>
                                         </tr>
                                         <tr>
@@ -124,7 +129,7 @@
    </div>
  </div>
 
- <!-- Modal de Temas-->
+ <!-- Modal de Temas>
         <div class="modal fade modalExportarAsistencia" id="modalTemaSilabico" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
              aria-hidden="true">
              <div class="modal-dialog" role="document">
@@ -162,7 +167,7 @@
                  </div>
              </div>
           </div>
-  <!--FIN Modal de Temas-->
+  <FIN Modal de Temas-->
 
 
 <?php

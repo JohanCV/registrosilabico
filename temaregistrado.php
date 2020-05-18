@@ -1,11 +1,11 @@
 <?php
   require_once("config/conexion.php");
-  if (isset($_POST["temasilabico"])) {
-      $temasilabico = $_POST["temasilabico"];
+  if (isset($_POST["check_list_tema"])) {
+      $temasilabico = $_POST["check_list_tema"];
       $aulavirtual = "";
       $localhost = "localhost";
       $emailmd5 = "33ff7d62b29b24e8bca8af8531159ea9";
-      echo "$temasilabico";
+      echo "$temasilabico[0]";
       echo "<br/> PROBANDO";
 
       require_once("vista/cabecera.php");

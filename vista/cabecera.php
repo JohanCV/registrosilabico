@@ -28,17 +28,14 @@
       border:1px solid;
       margin-top:10px;
     }
-    th{
-      color: Black;
-    }
     td{
       color: white;
     }
-    h5{
+    th,h5,i{
       color: Black;
     }
-    i{
-      color: Black;
+    checkbox{
+      color: Blue;
     }
  </style>
 </head>
