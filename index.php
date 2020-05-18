@@ -1,14 +1,27 @@
 <?php
-  if (isset($_GET["value"])) {
-      $email = $_GET["value"];
-      $findme = "/";
-      $pos = strpos($email, $findme);
-      $partcorreo = substr($email,0,$pos);
+  require_once("config/conexion.php");
+  require_once("modelo/Usuario.php");
 
-      echo "$partcorreo";
-      echo "<br/> PROBANDO";
-      //$porcentaje = $_SESSION["semana"]*100/17;
-      $porcentaje = 17*100/17;
+  $user_class = new Usuario();
+
+  if (isset($_GET["value"])) {
+      $email_md5 = $_GET["value"];
+      $findme = "/";
+      $pos = strpos($email_md5, $findme);
+      $partcorreo = substr($email_md5,0,$pos);
+      //capturo el email de quien inicia sesion
+      $email = $user_class->getEmailMd5($partcorreo);
+      if($email != "nomatch"){
+          //echo "$email <br/>";
+          $user_class->getDatosDocente($email);
+      }else {
+          header("Location:".Conectar::ruta_aulavirtual());
+      }
+
+      //echo "$partcorreo";
+      //echo "<br/> PROBANDO";
+
+      $porcentaje = $_SESSION["semana"]*100/17;
       (isset($rpta)? $rpta = 24 : $rpta = number_format($porcentaje));
 
       require_once("vista/cabecera.php");
@@ -38,7 +51,7 @@
                                     <tbody>
                                         <tr>
                                            <th scope="row">Docente</th>
-                                           <td><b><?= (isset($_SESSION["nombre"])? $_SESSION["nombre"]:"No hay información"); ?></b></td>
+                                           <td><b><?= (isset($_SESSION["nombreCab"])? $_SESSION["nombreCab"]:"No hay información"); ?></b></td>
                                         </tr>
                                         <tr>
                                           <th scope="row">Facultad</th>
@@ -157,6 +170,6 @@
 <?php
   require_once("vista/footer.php");
 }else{
-  header("Location:http://190.119.145.175/miaula");
+  header("Location:".Conectar::ruta_aulavirtual());
 }
 ?>

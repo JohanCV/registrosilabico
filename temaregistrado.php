@@ -1,7 +1,10 @@
 <?php
+  require_once("config/conexion.php");
   if (isset($_POST["temasilabico"])) {
       $temasilabico = $_POST["temasilabico"];
-
+      $aulavirtual = "";
+      $localhost = "localhost";
+      $emailmd5 = "33ff7d62b29b24e8bca8af8531159ea9";
       echo "$temasilabico";
       echo "<br/> PROBANDO";
 
@@ -36,11 +39,11 @@
                                             </div>
                                             <div class="modal-footer d-flex justify-content-center">
                                               <form action="" method="post">
-                                                   <button type="submit" id="btnGuardarTema" name='btnGuardarTema'
-                                                           value="Guardar Tema" class="btn btn-warning"><a href="http://localhost/proyecto/registrosilabico/?value=33ff7d62b29b24e8bca8af8531159ea9" style="color: #fff;">Editar</a>
+                                                   <button type="submit" id="btnEditarTema" name='btnEditarTema'
+                                                           value="Editar Tema" class="btn btn-warning" style="color: #fff;">Editar<a href=<?php Conectar::ruta($localhost,$emailmd5); ?>></a>
                                                    </button>
-                                                   <button type="submit" id="btnGuardarTema" name='btnGuardarTema'
-                                                           value="Guardar Tema" class="btn btn-success"><a href="http://190.119.145.175/miaula" style="color: #fff;">Terminar</a>
+                                                   <button type="submit" id="btnTerminarTema" name='btnTerminarTema'
+                                                           value="Terminar Tema" class="btn btn-danger">Terminar<a href=<?php Conectar::ruta_aulavirtual(); ?>></a>
                                                    </button>
                                               </form>
                                             </div>
@@ -63,13 +66,6 @@
 <?php
   require_once("vista/footer.php");
 }else{
-  header("Location:http://190.119.145.175/miaula");
+  header("Location:".Conectar::ruta_aulavirtual());
 }
  ?>
-
-<!-- Modal de Tema Registrado-->
-       <div class="modal fade modalExportarAsistencia" id="modalTemaRegistrado" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
-            aria-hidden="true">
-
-         </div>
- <!--FIN Modal de Temas-->
