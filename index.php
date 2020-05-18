@@ -6,20 +6,16 @@
 
   if (isset($_GET["value"])) {
       $email_md5 = $_GET["value"];
-      $findme = "/";
-      $pos = strpos($email_md5, $findme);
-      $partcorreo = substr($email_md5,0,$pos);
+      //echo "$emailmd5";
+      //echo "<br/> PROBANDO";
       //capturo el email de quien inicia sesion
-      $email = $user_class->getEmailMd5($partcorreo);
+      $email = $user_class->getEmailMd5($emailmd5);
       if($email != "nomatch"){
           //echo "$email <br/>";
           $user_class->getDatosDocente($email);
       }else {
           header("Location:".Conectar::ruta_aulavirtual());
       }
-
-      //echo "$partcorreo";
-      //echo "<br/> PROBANDO";
 
       $porcentaje = $_SESSION["semana"]*100/17;
       (isset($rpta)? $rpta = 24 : $rpta = number_format($porcentaje));
