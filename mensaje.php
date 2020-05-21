@@ -42,6 +42,10 @@
                                                             echo '<p class="lead text-gray-800 mb-5">Lo sentimos, tiene un conflicto de horario de clases programadas. Por favor comuniquese con DUFA para corregir sus horarios.</p>
                                                                   <p class="text-gray-500 mb-0"></p>';
                                                             break;
+                                                          case '3':
+                                                            echo '<p class="lead text-gray-800 mb-5">Lo sentimos, No se encuentra en nuestra base de datos, comuniquese con el Administrador.</p>
+                                                                    <p class="text-gray-500 mb-0"></p>';
+                                                            break;
 
                                                           default:
                                                             echo '<p class="lead text-gray-800 mb-5">Lo sentimos, ahora no tiene una clase programada.</p>

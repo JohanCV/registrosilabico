@@ -41,19 +41,26 @@
           return $tema;
       }
 
-     //metodo para registrar asistencia
-      public function registrar_asistencia_cabecera($row,$nombre,$facultad,$escuela,$asignatura,$codasig,$grupo,$horaini,$horafin,$dia,$correo,$aula,$semana,$tema,$porcentaje){
+     //metodo para registrar asistencia de los docentes y temasilabico
+      public function registrar_asistencia_tema_cabecera($row,$nombre,$facultad,$escuela,$asignatura,$codasig,$grupo,$horaini,$horafin,$dia,$correo,$aula,$semana,$tema,$porcentaje){
 
             $conectar=parent::conexion();
             parent::set_names();
-
-            if(isset($_POST["enviar"])){
+            //echo "dentro la funcion registrar_asistencia_tema_cabecera <br/>";
+            $temas = $tema;
+            if (isset($temas)) {
+                $temasilabico_acumulado ="";
+                foreach ($temas as $showtemasilabico) {
+                    $temasilabico_acumulado .= $showtemasilabico.",";
+                }
+            }
+            if(isset($_POST["enviar"])){ //echo "entre al post enviar <br/>";
                 $_SESSION['estadoRegistroCab']= false;
                 //$row = self::get_asistencia_cabecera();
                 //var_dump($row);
-                if($row ==0){
+                if($row ==0){ //echo "entre a la consulta de insercion del tema <br/>";
                     $sql="insert into asistencia_cabecera
-                          values(null,?,?,?,?,?,?,?,?,?,CURDATE(),?,?,?,?,?,?)";
+                          values(null,?,?,?,?,?,?,?,?,?,CURDATE(),DATE_FORMAT(NOW( ), '%H:%i:%S'),?,?,?,?,?,?)";
 
                     $sql=$conectar->prepare($sql);
 
@@ -69,33 +76,34 @@
                     $sql->bindValue(10, $_SESSION["correo"]);
                     $sql->bindValue(11, $_SESSION["aula"]);
                     $sql->bindValue(12, $_SESSION["semana"]);
-                    $sql->bindValue(13, $_POST["tema"]);
-                    $sql->bindValue(14, $_POST["porcentaje"]);
+                    $sql->bindValue(13, $temasilabico_acumulado);
+                    $sql->bindValue(14, $_SESSION["porcentajeacu"]);
                     $sql->bindValue(15, "1");
-
 
                     $con = $sql->execute();
                     if($con){
                         $_SESSION['estadoRegistroCab'] = true;
                     }
                 }else{
-                    header("Location:".Conectar::ruta()."asistencias.php");
+                    //header("Location:".Conectar::ruta()."asistencias.php");
+                    echo "ya existe un registro de este usuario, ya que row = ".$row."  <br/>";
                     $_SESSION["recuperandoinfo"]= "si";
                 }
                 $conectar=null;
+                unset($_POST["guardarCabTema"]);
 		            unset($_POST["enviar"]);
             	  return $_SESSION['estadoRegistroCab'];
-	        }
+	            }
         }
 
-        public function get_asistencia_cabecera(){
-            $conectar=parent::conexion();
+        public function get_asistencia_tema_cabecera(){
+                $conectar=parent::conexion();
                 parent::set_names();
 
                 $sql="SELECT * FROM `asistencia_cabecera`
                 WHERE `facultad` = ?  AND `programa` = ?
                 AND  `asignatura` =? AND `codasig`=? AND `grupo` =?
-                AND `horaini`=? AND `horafin`=?
+                AND `hora_ini`=? AND `hora_fin`=?
                 and `dia`=? AND `fecha`=CURDATE() AND `correo`= ?";
 
                 $sql=$conectar->prepare($sql);
@@ -116,7 +124,7 @@
         }
 
         public function get_datos_asistencia_cabecera(){
-            $conectar=parent::conexion();
+                $conectar=parent::conexion();
                 parent::set_names();
 
                 $sql="SELECT * FROM `asistencia_cabecera`
@@ -145,10 +153,6 @@
                 return $resp;
         }
 
-
-
-
-
         public function getFechaCabecera($correo, $escuela, $asignatura,$codasig, $grupo, $aula){
             $conectar=parent::conexion();
             parent::set_names();
@@ -173,23 +177,24 @@
 
         }
 
-        public function getIdCabecera($correo,$codasig, $grupo){
+        public function getIdCabecera($correo,$codasig, $grupo, $escuela){
 
             $conectar=parent::conexion();
             parent::set_names();
 
-            $correo = $correo; //var_dump($correo);
-            $codasig = $codasig; //var_dump($codasig);
-            $grupo = $grupo; //var_dump($grupo);
+            $escuela = $escuela;  //var_dump($escuela);
+            $correo  = $correo;   //var_dump($correo);
+            $codasig = $codasig;  //var_dump($codasig);
+            $grupo   = $grupo;    //var_dump($grupo);
 
             $rpta = false;
 
             if(empty($correo)){
-                header("Location:".Conectar::ruta()."index.php");
+                header("Location:".Conectar::ruta_aulavirtual());
                 exit();
             }else{
                 $sql="SELECT id FROM `asistencia_cabecera` WHERE
-                        correo =? and  codasig =? AND grupo =? AND horaini=? AND horafin=? AND fecha = CURDATE()";
+                        correo =? and  codasig =? AND grupo =? AND hora_ini=? AND hora_fin=? AND fecha = CURDATE() AND programa =?";
 
                 $sql=$conectar->prepare($sql);
 
@@ -198,6 +203,7 @@
                 $sql->bindValue(3, $grupo);
                 $sql->bindValue(4, $_SESSION["hora_inicial"]);
                 $sql->bindValue(5, $_SESSION["hora_final"]);
+                $sql->bindValue(6, $escuela);
                 $sql->execute();
 
                 $resultado = $sql->fetch();

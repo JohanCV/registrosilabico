@@ -13,14 +13,16 @@
       //capturo el email de quien inicia sesion
       $email = $user_class->getEmailMd5($email_md5);
       if($email != "nomatch"){
-          //echo "$email <br/>";
+          echo "$email <br/>";
           $user_class->getDatosDocente($email);
           $temasilabico[] = $asistencia_class->get_tema_curso_docente($email);
+          $_SESSION["correo"] = $email;
           //var_dump($temasilabico);
           //echo count($temasilabico);
           //var_dump($_SESSION["row_cnt_temas_cap"] );
       }else {
           //header("Location:".Conectar::ruta_aulavirtual());
+          header("Location:".Conectar::ruta()."mensaje.php?op=3");
           echo "email es igual nomatch: no existe el email en nuestra base de datos";
       }
 
@@ -69,17 +71,17 @@
                                           <td class="h5"><b><?= (isset($_SESSION["asignaturaCab"])? $_SESSION["asignaturaCab"]:"No hay información"); ?></b></td>
                                         </tr>
                                         <tr>
-                                          <th scope="row">Código del Curso</th>
+                                          <th scope="row">Código</th>
                                           <td><?= (isset($_SESSION["codasignaturaCAb"])? $_SESSION["codasignaturaCAb"]:"No hay información"); ?></td>
                                         </tr>
                                         <tr>
-                                          <th scope="row">Grupo del Curso</th>
+                                          <th scope="row">Grupo</th>
                                           <td><?= (isset($_SESSION["grupo"])? $_SESSION["grupo"]:"No hay información"); ?></td>
                                         </tr>
-                                        <tr>
+                                        <!--tr>
                                           <th scope="row">Aula</th>
-                                          <td><?= (isset($_SESSION["aula"])? $_SESSION["aula"]:"No hay información"); ?></td>
-                                        </tr>
+                                          <td><?php //(isset($_SESSION["aula"])? $_SESSION["aula"]:"No hay información"); ?></td>
+                                        </tr-->
                                         <tr>
                                           <th scope="row">Semana</th>
                                           <td><?php $semanas=date("W"); $_SESSION["semana"]= $semanas -16;  echo (isset($_SESSION["semana"])? $_SESSION["semana"]:"No hay información"); ?></td>
@@ -106,7 +108,7 @@
                                               <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: <?= $rpta?>" >
                                               <?php
                                                 echo (isset($rpta)? $rpta.' %':"No hay información");
-                                                $_SESSION["porcentaje"]  = $rpta;
+                                                $_SESSION["porcentajeacu"]  = $rpta;
                                               ?>
                                               </div>
                                             </div>
@@ -117,8 +119,8 @@
                                               <th scope="row"></th>
                                               <td>
                                                 <input type="hidden" class="form-control" name="enviar" value="guardadoCabe">
-                                                <button type="submit" class="btn btn-success col-md-12" name="guardarCab" id="saveCab" style="margin-top:15px;">
-                                                        <i class="fas fa-fw fa-save"></i> Guardar Avance
+                                                <button type="submit" class="btn btn-success col-md-12" name="guardarCabTema" id="saveCab" style="margin-top:15px;">
+                                                        <i class="fas fa-fw fa-save" id="guardaravance"></i> Guardar Avance
                                                 </button>
                                               </td>
                                             </tr>
@@ -183,5 +185,6 @@
   require_once("vista/footer.php");
 }else{
   header("Location:".Conectar::ruta_aulavirtual());
+  exit();
 }
 ?>
