@@ -17,25 +17,5 @@
 
  <!-- Custom styles for this template-->
  <link href="css/sb-admin-2.min.css" rel="stylesheet">
- <style>
-    select {
-      width:100%;
-      height: 300px;
-      font-family:cursive;
-      font-size:16px;
-      background:#f5f5f5;
-      padding:10px;
-      border:1px solid;
-      margin-top:10px;
-    }
-    td{
-      color: white;
-    }
-    th,h5,i{
-      color: Black;
-    }
-    checkbox{
-      color: Blue;
-    }
- </style>
+ <link rel="stylesheet" href="./css/styleown.css">
 </head>

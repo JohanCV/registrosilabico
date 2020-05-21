@@ -1,8 +1,10 @@
 <?php
   require_once("config/conexion.php");
   require_once("modelo/Usuario.php");
+  require_once("modelo/Asistencia.php");
 
   $user_class = new Usuario();
+  $asistencia_class = new Asistencia();
 
   if (isset($_GET["value"])) {
       $email_md5 = $_GET["value"];
@@ -13,12 +15,16 @@
       if($email != "nomatch"){
           //echo "$email <br/>";
           $user_class->getDatosDocente($email);
+          $temasilabico[] = $asistencia_class->get_tema_curso_docente($email);
+          //var_dump($temasilabico);
+          //echo count($temasilabico);
+          //var_dump($_SESSION["row_cnt_temas_cap"] );
       }else {
           //header("Location:".Conectar::ruta_aulavirtual());
           echo "email es igual nomatch: no existe el email en nuestra base de datos";
       }
 
-      $porcentaje = $_SESSION["semana"]*100/17;
+      (isset($_SESSION["porcentaje"])?$porcentaje = $_SESSION["porcentaje"]:  $_SESSION["semana"]*100/17);
       (isset($rpta)? $rpta = 0 : $rpta = number_format($porcentaje));
 
       require_once("vista/cabecera.php");
@@ -83,15 +89,18 @@
                                           <td>
                                             <!--input name="temasilabico" class="form-control" type="text" placeholder="Ingrese el tema..."
                                                    data-toggle='modal' data-target='#modalTemaSilabico' data-backdrop="static" data-keyboard="false" required-->
-                                                    <div class="checkbox">
-                                                      <input type="checkbox" name="check_list_tema[]" value="tema1" required><label> Tema 1: Excel</label><br/>
-                                                    </div>
-                                                    <input type="checkbox" name="check_list_tema[]" value="tema2"><label> Tema 2: Java</label><br/>
-                                                    <input type="checkbox" name="check_list_tema[]" value="tema3"><label> Tema 3: PHP</label><br/>
+                                                  <select name="check_list_tema[]" multiple required>
+                                                      <?php for($i = 0; $i < $_SESSION["row_cnt_temas_cap"]; $i++){
+                                                              foreach ($temasilabico as $showtemasilabico) { ?>
+                                                                  <option value="<?= (isset($showtemasilabico[$i]["tema"])? $showtemasilabico[$i]["tema"]:"No hay seleccion de temas. Verifique")?>"> <?= (isset($showtemasilabico[$i]["tema"])? $showtemasilabico[$i]["tema"]:"No hay seleccion de temas") ?></option>';
+                                                                  <option style="font-size: 1%; background-color: #858796;" disabled>&nbsp;</option>
+                                                      <?php   }
+                                                            }?>
+                                                  </select>
                                           </td>
                                         </tr>
                                         <tr>
-                                          <th scope="row">% de Avance a la fecha</th>
+                                          <th scope="row">% Acumulado</th>
                                           <td>
                                             <div class="progress progress-md mb-2">
                                               <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: <?= $rpta?>" >

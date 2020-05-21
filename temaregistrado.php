@@ -5,8 +5,8 @@
       $aulavirtual = "";
       $localhost = "localhost";
       $emailmd5 = "33ff7d62b29b24e8bca8af8531159ea9";
-      echo "$temasilabico[0]";
-      echo "<br/> PROBANDO";
+      //var_dump($temasilabico);
+      //echo "<br/> PROBANDO";
 
       require_once("vista/cabecera.php");
  ?>

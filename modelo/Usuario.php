@@ -54,7 +54,7 @@ class Usuario extends Conectar {
                         and dutic_docentes_20.grupo=dutic_horarios_20.grupo
                         #and dutic_horarios_20.dia = WEEKDAY(CURDATE())+1
                         and dutic_horarios_20.dia = 1
-                        and CAST('09:45' AS time)
+                        and CAST('07:45' AS time)
                         #and  time (NOW())
                         BETWEEN CAST(dutic_horarios_20.hora_ini AS time) AND DATE_SUB(CAST(dutic_horarios_20.hora_fin AS time), INTERVAL 1 MINUTE)
                         and dutic_docentes_20.correo = ?
@@ -95,93 +95,6 @@ class Usuario extends Conectar {
                 return $rpta;
                 //var_dump($rpta);
                 //return $resultado;
-
-            }
-
-        }
-
-        public function getDetalleAsistencia(){
-            $conectar=parent::conexion();
-            parent::set_names();
-            //echo "detalle";
-            $codAsig = $_SESSION["codasignaturaCAb"];
-            $correo = $_SESSION["correo"];
-            $grupo = $_SESSION["grupo"];
-            $dia = $_SESSION["dia"];
-
-            if(empty($correo)){
-                header("Location:".Conectar::ruta()."index.php");
-                exit();
-            }else{
-                $sql = "SELECT distinct m.nombre nombre_s,m.paterno apellido_p,m.materno apellido_m
-                FROM`dutic_matriculados_19` m,`dutic_docentes_19` d,`dutic_horarios_19` h
-                where
-                m.codasig=d.codasig and
-                h.codasig=d.codasig and
-                d.codasig=? and
-                d.correo=? and
-                m.escuela=d.escuela and
-                m.grupo=? and
-                h.dia=?";
-
-                $sql=$conectar->prepare($sql);
-
-                $sql->bindValue(1, $codAsig);
-                $sql->bindValue(2, $correo);
-                $sql->bindValue(3, $grupo);
-                $sql->bindValue(4, $dia);
-                $sql->execute();
-                $resultado = $sql->fetch();
-
-                //si existe el registro entonces se conecta en session
-                if(is_array($resultado) and count($resultado)>0){
-
-                    $_SESSION["nombres"] = $resultado["nombre_s"];
-                    $_SESSION["apellidop"] = $resultado["apellido_p"];
-                    $_SESSION["apellidom"] = $resultado["apellido_m"];
-                    //header("Location:".Conectar::ruta()."asistencia.php");
-                }else{
-                    //si no existe el registro
-                    //header("Location:".Conectar::ruta()."404.php");
-                }
-
-                return $resultado;
-            }
-        }
-
-        public function getCursosDocente(){
-
-            $conectar=parent::conexion();
-            parent::set_names();
-
-            $correo = $_SESSION["correo"];
-
-            if(empty($correo)){
-                header("Location:".Conectar::ruta()."index.php");
-                exit();
-            }else{
-                $sql = "SELECT DISTINCT dutic_docentes_19.escuela, dutic_docentes_19.codasig, dutic_matriculados_19.asignatura, dutic_docentes_19.grupo
-
-                from dutic_matriculados_19, dutic_docentes_19, dutic_horarios_19
-
-                WHERE dutic_matriculados_19.codasig=dutic_docentes_19.codasig
-                and dutic_docentes_19.codasig=dutic_horarios_19.codasig
-                and dutic_matriculados_19.escuela = dutic_docentes_19.escuela
-                and dutic_docentes_19.escuela=dutic_horarios_19.escuela
-                and dutic_matriculados_19.grupo = dutic_docentes_19.grupo
-                and dutic_docentes_19.grupo=dutic_horarios_19.grupo
-
-
-                and dutic_docentes_19.correo=?
-                ORDER BY dutic_docentes_19.escuela, dutic_matriculados_19.asignatura, dutic_docentes_19.grupo";
-
-                $sql=$conectar->prepare($sql);
-
-                $sql->bindValue(1, $correo);
-                $sql->execute();
-                $resultado = $sql->fetchAll();
-
-                return $resultado;
             }
         }
     }
