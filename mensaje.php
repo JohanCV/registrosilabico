@@ -37,6 +37,7 @@
                                                  <div class="text-center message-text">
                                                    <i class="fas fa-sad-cry fa-6x"></i>
                                                    <?php
+                                                        $op="";
                                                         switch ($op) {
                                                           case '2':
                                                             echo '<p class="lead text-gray-800 mb-5">Lo sentimos, tiene un conflicto de horario de clases programadas. Por favor comuniquese con DUFA para corregir sus horarios.</p>

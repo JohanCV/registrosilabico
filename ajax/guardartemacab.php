@@ -15,10 +15,10 @@
             $_SESSION["id_cabecera"] = $asistencia->getIdCabecera($_SESSION["correo"],$_SESSION["codasignaturaCAb"],$_SESSION["grupo"],$_SESSION["escuelaCab"]);
             echo "id_cabecera: "; var_dump($_SESSION["id_cabecera"]);
         }
-    }else{ echo "no existel post <br/>";
+    }else{ //echo "no existel post <br/>";
         if($row != 0){
             $_SESSION["idcabeceracontinuo"]= $asistencia->getIdCabecera($_SESSION["correo"],$_SESSION["codasignaturaCAb"],$_SESSION["grupo"],$_SESSION["escuelaCab"]);
-            echo "id_cabecera: "; var_dump($_SESSION["id_cabecera"]);
+            //echo "id_cabecera: "; var_dump($_SESSION["id_cabecera"]);
         }
     }
 

@@ -21,7 +21,9 @@
           //$_SESSION["temas_silabus"] = $temasilabico_acumulado;
           require_once('ajax/logout.php');
       }
-
+      if (isset($_POST["btnEditarTema"])) {  echo "entre a btnEditarTema <br/>";
+          require_once('ajax/editartemaregistrado.php');
+      }
 
       //var_dump($temasilabico_acumulado);
       //echo "<br/> PROBANDO";
@@ -58,9 +60,9 @@
                                             </div>
                                             <div class="modal-footer d-flex justify-content-center">
                                               <form action="" method="post">
-                                                   <button type="submit" id="btnEditarTema" name='btnEditarTema'
+                                                   <!--button type="submit" id="btnEditarTema" name='btnEditarTema'
                                                            value="Editar Tema" class="btn btn-warning" style="color: #fff;">Editar
-                                                   </button>
+                                                   </button-->
                                                    <button type="submit" id="btnTerminarTema" name='btnTerminarTema'
                                                            value="Terminar Tema" class="btn btn-danger">Terminar
                                                    </button>
@@ -71,9 +73,9 @@
                                           <form method="post">
                                             <div class="modal-body mx-3">
                                                 <h5>Su Tema Silabico Ya fue registrado exitosamente.</h5>
-                                                <button type="submit" id="btnEditarTema" name='btnEditarTema'
+                                                <!--button type="submit" id="btnEditarTema" name='btnEditarTema'
                                                         value="Editar Tema" class="btn btn-warning" style="color: #fff;">Editar
-                                                </button>
+                                                </button-->
                                                 <button type="submit" id="btnTerminarTema" name='btnTerminarTema'
                                                         value="Terminar Tema" class="btn btn-danger">Terminar
                                                 </button>

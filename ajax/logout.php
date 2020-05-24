@@ -1,7 +1,7 @@
 <?php
     require_once("./config/conexion.php");
 
-    if(isset($_SESSION["nombreCab"]) and isset($_SESSION["facultadCab"]) and isset($_SESSION["escuelaCab"]) AND
+    if(isset($_POST("btnTerminarTema")) isset($_SESSION["nombreCab"]) and isset($_SESSION["facultadCab"]) and isset($_SESSION["escuelaCab"]) AND
         isset($_SESSION["asignaturaCab"]) and isset($_SESSION["codasignaturaCAb"]) and isset($_SESSION["grupo"])AND
         isset($_SESSION["aula"]) and isset($_SESSION["semana"])){
 
@@ -22,10 +22,12 @@
         unset($_SESSION["id_cabecera"][0]);
 	      unset($_SESSION["idcabeceracontinuo"][0]);
 
+        session_destroy();
+        //header("Location:".Conectar::ruta()."index.php?mac=".$_SESSION["mac"]);
+        header("Location:".Conectar::ruta_aulavirtual());
+        exit();
+
     }
-    session_destroy();
-    //header("Location:".Conectar::ruta()."index.php?mac=".$_SESSION["mac"]);
-    header("Location:".Conectar::ruta_aulavirtual());
-    exit();
+
 
 ?>

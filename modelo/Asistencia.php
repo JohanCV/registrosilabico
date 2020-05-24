@@ -82,7 +82,7 @@
 
                     $con = $sql->execute();
                     if($con){
-                        $_SESSION['estadoRegistroCab'] = true;
+                        $_SESSION['estadoRegistroCab'] = true;    var_dump($_SESSION['estadoRegistroCab']);
                     }
                 }else{
                     //header("Location:".Conectar::ruta()."asistencias.php");
