@@ -32,26 +32,28 @@
 
           if ($resultado_temas) { //var_dump($resultado_temas);
                 $tema = $resultado_temas;
+                $_SESSION["porcentaje"]= $tema[0]["porcentaje"];
+                $_SESSION["row_cnt_temas_cap"] = $row_cnt;
                 //var_dump($tema);
           }else {
-                $tema = "algun dato no es correcto para obtener el tema de la semana";
+                //echo $tema;
+                $tema = "algun dato no es correcto, o no esta en la semana correspondiente para obtener el tema de la semana";
           }
-          $_SESSION["porcentaje"]= $tema[0]["porcentaje"];
-          $_SESSION["row_cnt_temas_cap"] = $row_cnt;
           return $tema;
       }
 
-     //metodo para registrar asistencia de los docentes y temasilabico
+      //metodo para registrar asistencia de los docentes y temasilabico
       public function registrar_asistencia_tema_cabecera($row,$nombre,$facultad,$escuela,$asignatura,$codasig,$grupo,$horaini,$horafin,$dia,$correo,$aula,$semana,$tema,$porcentaje){
 
             $conectar=parent::conexion();
             parent::set_names();
             //echo "dentro la funcion registrar_asistencia_tema_cabecera <br/>";
             $temas = $tema;
+            $porcentajeacumulado = $porcentaje;
             if (isset($temas)) {
                 $temasilabico_acumulado ="";
                 foreach ($temas as $showtemasilabico) {
-                    $temasilabico_acumulado .= $showtemasilabico.",";
+                    $temasilabico_acumulado .= $showtemasilabico.".";
                 }
             }
             if(isset($_POST["enviar"])){ //echo "entre al post enviar <br/>";
@@ -77,16 +79,16 @@
                     $sql->bindValue(11, $_SESSION["aula"]);
                     $sql->bindValue(12, $_SESSION["semana"]);
                     $sql->bindValue(13, $temasilabico_acumulado);
-                    $sql->bindValue(14, $_SESSION["porcentajeacu"]);
+                    $sql->bindValue(14, $porcentajeacumulado);
                     $sql->bindValue(15, "1");
 
                     $con = $sql->execute();
                     if($con){
-                        $_SESSION['estadoRegistroCab'] = true;    var_dump($_SESSION['estadoRegistroCab']);
+                        $_SESSION['estadoRegistroCab'] = true;    //var_dump($_SESSION['estadoRegistroCab']);
                     }
                 }else{
                     //header("Location:".Conectar::ruta()."asistencias.php");
-                    echo "ya existe un registro de este usuario, ya que row = ".$row."  <br/>";
+                    //echo "ya existe un registro de este usuario, ya que row = ".$row."  <br/>";
                     $_SESSION["recuperandoinfo"]= "si";
                 }
                 $conectar=null;
@@ -142,16 +144,75 @@
                 $sql->bindValue(6, $_SESSION["hora_inicial"]);      //var_dump($_SESSION["hora_inicial"]);
                 $sql->bindValue(7, $_SESSION["hora_final"]);        //var_dump($_SESSION["hora_final"]);
                 $sql->bindValue(8, $_SESSION["dia"]);               //var_dump($_SESSION["dia"]);
-                $sql->bindValue(9, $_SESSION["correo"]);            //var_dump($_SESSION["correo"]);
+                $sql->bindValue(9, $_SESSION["correo"]);            var_dump($_SESSION["correo"]);
                 $sql->execute();                                    //var_dump($sql->execute());
 
-                $resultado = $sql->fetchAll();	                    //var_dump($resultado);
+                $resultado = $sql->fetchAll(PDO::FETCH_ASSOC);	                    var_dump($resultado);
                 $resp = "";
                 foreach( $resultado as $resul){
                     $resp= $resul;
                 }                                                   //var_dump($resp);
                 return $resp;
         }
+
+        public function get_datos_asistencia_tema_cabecera_registrado($correo, $idtemaregistrado){
+                $conectar=parent::conexion();
+                parent::set_names();
+
+                $correo = $correo;
+                $idtemaregistrado = $idtemaregistrado;
+
+                $sql="SELECT porcentaje FROM `asistencia_cabecera` WHERE `facultad` = ? AND `programa` = ? AND `asignatura` = ? AND `codasig`= ?
+                      AND `grupo` = ? AND `hora_ini`= ? AND `fecha`=CURDATE() AND `correo`= ? AND id =?";
+
+                $sql=$conectar->prepare($sql);
+                $sql->bindValue(1, $_SESSION["facultadCab"]);
+                $sql->bindValue(2, $_SESSION["escuelaCab"]);
+                $sql->bindValue(3, $_SESSION["asignaturaCab"]);
+                $sql->bindValue(4, $_SESSION["codasignaturaCAb"]);
+                $sql->bindValue(5, $_SESSION["grupo"]);
+                $sql->bindValue(6, $_SESSION["hora_inicial"]);
+                $sql->bindValue(7, $correo);
+                $sql->bindValue(8, $idtemaregistrado);
+                $sql->execute();
+
+                $row_cnt = $sql->rowCount();
+                $resultado = $sql->fetchAll(PDO::FETCH_ASSOC);    //var_dump($resultado);
+                return $resultado;
+        }
+
+        public function actualizarTemaRegistrado($tema, $porcentaje){
+                $conectar=parent::conexion();
+                parent::set_names();
+
+                $tema = $tema;
+                $porcentaje= $porcentaje;
+
+                if(isset($tema) AND isset($porcentaje)){
+                  $temasilabico_acumulado ="";
+                  foreach ($tema as $showtemasilabico) {
+                      $temasilabico_acumulado .= $showtemasilabico.".";
+                  }
+                        $sql= "UPDATE asistencia_cabecera SET tema= ?, porcentaje= ? WHERE correo = ? AND id = ? AND fecha = CURDATE() ";
+
+                        $sql=$conectar->prepare($sql);
+
+                        $sql->bindValue(1, $temasilabico_acumulado);
+                        $sql->bindValue(2, $porcentaje);
+    		                $sql->bindValue(3, $_SESSION["correo"]);
+                        $sql->bindValue(4, $_SESSION["id_cabecera"]);
+                        $sql->execute();
+                        $resultado = $sql->fetch();
+                    //echo"se actualizao exitosamente";
+                    if ($resultado) {
+                        $_SESSION["exitosoactualizaciontema"] = true;
+                    }
+                }
+                // else{
+                //     //echo"no se actualizo";
+                //     $_SESSION["exitosoactualizaciontema"] = false;
+                // }
+          }
 
         public function getFechaCabecera($correo, $escuela, $asignatura,$codasig, $grupo, $aula){
             $conectar=parent::conexion();
@@ -255,51 +316,6 @@
 
                 return $resp;
             }
-
-
         }
-
-        public function getHoraFinCurso(){
-
-            $conectar=parent::conexion();
-            parent::set_names();
-
-            $correo = $_SESSION["correo"];
-
-            if(empty($correo)){
-                header("Location:".Conectar::ruta()."index.php");
-                exit();
-            }else{
-                $sql="SELECT  DISTINCT hora_fin
-
-                from dutic_matriculados_19, dutic_docentes_19, dutic_horarios_19
-
-                WHERE dutic_matriculados_19.codasig=dutic_docentes_19.codasig
-                and dutic_docentes_19.codasig=dutic_horarios_19.codasig
-                and dutic_matriculados_19.escuela = dutic_docentes_19.escuela
-                and dutic_docentes_19.escuela=dutic_horarios_19.escuela
-                and dutic_matriculados_19.grupo = dutic_docentes_19.grupo
-                and dutic_docentes_19.grupo=dutic_horarios_19.grupo
-
-                and dutic_horarios_19.dia = WEEKDAY(CURDATE())+1
-                and  CAST('09:45' AS time)
-                BETWEEN CAST(dutic_horarios_19.hora_ini AS time) AND DATE_SUB(CAST(dutic_horarios_19.hora_fin AS time), INTERVAL 1 MINUTE)
-
-                and dutic_docentes_19.correo = ?";
-
-                $sql=$conectar->prepare($sql);
-
-                $sql->bindValue(1, $correo);
-                $sql->execute();
-
-                $resultado = $sql->fetch();
-
-                foreach( $resultado as $resul){
-                    $resp= $resul;
-                }
-
-                return $resp;
-            }
-        }
-    }
+  }
 ?>

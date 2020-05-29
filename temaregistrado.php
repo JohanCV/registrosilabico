@@ -1,28 +1,40 @@
 <?php
   require_once("config/conexion.php");
+  require_once("modelo/Asistencia.php");
+  $asistencia_class = new Asistencia();
+  $porcentaje_editar = $asistencia_class->get_datos_asistencia_tema_cabecera_registrado($_SESSION["correo"],$_SESSION["id_cabecera"]);
+  if ($porcentaje_editar) {
+      foreach ($porcentaje_editar as $showporcentaje_editar) {
+            $porcentaje_editarn = $showporcentaje_editar["porcentaje"]; //var_dump($porcentaje_editarn);
+      }
+  }
+
   if (isset(($_POST["btnEditarTema"]))) {
       require_once('ajax/editartemaregistrado.php');
   }
   if (isset($_SESSION["nombreCab"]) and isset($_SESSION["facultadCab"]) and isset($_SESSION["escuelaCab"]) AND
       isset($_SESSION["asignaturaCab"]) and isset($_SESSION["codasignaturaCAb"]) and isset($_SESSION["grupo"])AND
-      isset($_SESSION["aula"]) and isset($_SESSION["semana"]) and  isset($_POST["check_list_tema"])  ) {
+      isset($_SESSION["aula"]) and isset($_SESSION["semana"])  ) {
 
+      // $porcentaje = $_POST["porcentajeacu"];
       // $temasilabico = $_POST["check_list_tema"];
       // $temasilabico_acumulado ="";
       // foreach ($temasilabico as $showtemasilabico) {
       //     $temasilabico_acumulado .= $showtemasilabico.",";
       // }
+      //var_dump($_SESSION['estadoRegistroCab']);
+      // var_dump($_SESSION['exitosoactualizaciontema']);
+      //var_dump($mostrar_tema);
+
+
       //guardamos la informacion que viene del submit guardarCabTema
-      if (isset($_POST["guardarCabTema"])) {  //echo "entre a guardarCabTema <br/>";
+      if (isset($_POST["guardarCabTema"])) { //var_dump($_POST["guardarCabTema"]); //echo "entre a guardarCabTema <br/>";
           //$_SESSION["temas_silabus"] = $temasilabico_acumulado;
           require_once('ajax/guardartemacab.php');
       }
-      if (isset($_POST["btnTerminarTema"])) {  //echo "entre a guardarCabTema <br/>";
+      if (isset($_POST["actualizarCabTema"])) { //var_dump($_POST["actualizarCabTema"]); //echo "entre a guardarCabTema <br/>";
           //$_SESSION["temas_silabus"] = $temasilabico_acumulado;
-          require_once('ajax/logout.php');
-      }
-      if (isset($_POST["btnEditarTema"])) {  echo "entre a btnEditarTema <br/>";
-          require_once('ajax/editartemaregistrado.php');
+          require_once('ajax/actualizartemacab.php');
       }
 
       //var_dump($temasilabico_acumulado);
@@ -57,30 +69,32 @@
                                         <form method="post">
                                             <div class="modal-body mx-3">
                                                 <h5>Su Tema Silabico fue registrado exitosamente.</h5>
+                                                <!--h5>Su Tema Silabico fue registrado con un avance del <strong> //(isset($porcentaje_editarn)?$porcentaje_editarn:"0")  % </strong> exitosamente.</h5-->
                                             </div>
                                             <div class="modal-footer d-flex justify-content-center">
-                                              <form action="" method="post">
-                                                   <!--button type="submit" id="btnEditarTema" name='btnEditarTema'
+
+                                                   <button type="submit" id="btnEditarTema" name='btnEditarTema'
                                                            value="Editar Tema" class="btn btn-warning" style="color: #fff;">Editar
-                                                   </button-->
+                                                   </button>
                                                    <button type="submit" id="btnTerminarTema" name='btnTerminarTema'
                                                            value="Terminar Tema" class="btn btn-danger">Terminar
                                                    </button>
-                                              </form>
+
                                             </div>
                                         </form>
-                                        <?php else: ?>
-                                          <form method="post">
+                                      <?php endif;if(isset($_SESSION['exitosoactualizaciontema']) && $_SESSION['exitosoactualizaciontema'] == false): ?>
+
                                             <div class="modal-body mx-3">
-                                                <h5>Su Tema Silabico Ya fue registrado exitosamente.</h5>
-                                                <!--button type="submit" id="btnEditarTema" name='btnEditarTema'
+                                                <h5>Su Tema Silabico <strong> Ya Fue </strong> registrado exitosamente.</h5>
+                                                <!--h5>Su Tema Silabico <strong> Ya Fue </strong> registrado con un avance del <strong> <?= (isset($porcentaje_editarn)?$porcentaje_editarn:"0") ?>% </strong>  exitosamente.</h5-->
+                                                <button type="submit" id="btnEditarTema" name='btnEditarTema'
                                                         value="Editar Tema" class="btn btn-warning" style="color: #fff;">Editar
-                                                </button-->
+                                                </button>
                                                 <button type="submit" id="btnTerminarTema" name='btnTerminarTema'
                                                         value="Terminar Tema" class="btn btn-danger">Terminar
                                                 </button>
                                             </div>
-                                          </form>
+
                                       <?php endif; ?>
                                     </div>
                                 </div>
@@ -99,8 +113,14 @@
 
 <?php
   require_once("vista/footer.php");
+  if (isset($_POST["btnTerminarTema"])) {// var_dump($_POST["btnTerminarTema"]); echo "entre a guardarCabTema <br/>";
+      //$_SESSION["temas_silabus"] = $temasilabico_acumulado;
+      require_once('ajax/logout.php');
+  }
 }else{
-  header("Location:".Conectar::ruta_aulavirtual());
+
+  //header("Location:".Conectar::ruta_aulavirtual());
+  echo "No hay ninguna variable";
   exit();
 }
  ?>

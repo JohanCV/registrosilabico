@@ -1,9 +1,7 @@
 <?php
   require_once("config/conexion.php");
   //if (isset($_GET["value"])) {
-      //$emailmd5 = $_GET["value"];
-      $aulavirtual = "";
-      $localhost = "localhost";
+      //$emailmd5 = $_GET["value"];    
       (isset($_GET["op"])? $op = $_GET["op"]: "no hay opcion");
 
       require_once("vista/cabecera.php");

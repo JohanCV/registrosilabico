@@ -6,28 +6,36 @@
   $user_class = new Usuario();
   $asistencia_class = new Asistencia();
 
-  if (isset($emailmd5_editar) AND isset($idtemaregistrado)) {
-      //$email_md5 = $_GET["value"];
+  if (isset($_GET["value"]) AND isset($_GET["idoc"])) {
+      $email_md5 = $_GET["value"];
+      $idoc = $_GET["idoc"];
       //echo "$emailmd5";
       //echo "<br/> PROBANDO";
       //capturo el email de quien inicia sesion
-      //$email = $user_class->getEmailMd5($email_md5);
-      // if($email != "nomatch"){
-      //     //echo "$email <br/>";
-      //     $user_class->getDatosDocente($email);
-      //     $temasilabico[] = $asistencia_class->get_tema_curso_docente($email);
-      //     $_SESSION["correo"] = $email;
-      //     //var_dump($temasilabico);
-      //     //echo count($temasilabico);
-      //     //var_dump($_SESSION["row_cnt_temas_cap"] );
-      // }else {
-      //     //header("Location:".Conectar::ruta_aulavirtual());
-      //     header("Location:".Conectar::ruta()."mensaje.php?op=3");
-      //     //echo "email es igual nomatch: no existe el email en nuestra base de datos";
-      // }
+      $email = $user_class->getEmailMd5($email_md5);
+      if($email != "nomatch"){
+          //echo "$email <br/>";
+          $user_class->getDatosDocente($email);
+          $temasilabico[] = $asistencia_class->get_tema_curso_docente($email);
+          $porcentaje_editar = $asistencia_class->get_datos_asistencia_tema_cabecera_registrado($email,$idoc);
+          if ($porcentaje_editar) {
+              foreach ($porcentaje_editar as $showporcentaje_editar) {
+                    $porcentaje_editarn = $showporcentaje_editar["porcentaje"]; //var_dump($porcentaje_editarn);
+              }
+          }
+          //$_SESSION["correo"] = $email;
+          //var_dump($temasilabico);
+          //echo count($temasilabico);
+          //var_dump($_SESSION["row_cnt_temas_cap"] );
+          //var_dump($porcentaje_editar);
+      }else {
+          //header("Location:".Conectar::ruta_aulavirtual());
+          header("Location:".Conectar::ruta()."mensaje.php?op=3");
+          //echo "email es igual nomatch: no existe el email en nuestra base de datos";
+      }
 
-      (isset($_SESSION["porcentaje"])?$porcentaje = $_SESSION["porcentaje"]:  $_SESSION["semana"]*100/17);
-      (isset($rpta)? $rpta = 0 : $rpta = number_format($porcentaje));
+      //(isset($_SESSION["porcentaje"])?$porcentaje = $_SESSION["porcentaje"]:  $_SESSION["semana"]*100/17);
+      //(isset($rpta)? $rpta = 0 : $rpta = number_format($porcentaje));
 
       require_once("vista/cabecera.php");
  ?>
@@ -98,23 +106,16 @@
                                         <tr>
                                           <th scope="row">% Acumulado</th>
                                           <td>
-                                            <div class="progress progress-md mb-2">
-                                              <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: <?= $rpta?>" >
-                                              <?php
-                                                echo (isset($rpta)? $rpta.' %':"No hay información");
-                                                $_SESSION["porcentajeacu"]  = $rpta;
-                                              ?>
-                                              </div>
-                                            </div>
+                                            <input name="porcentajeacu" class="form-control" type="number" min="0" max="100" placeholder="<?= (isset($porcentaje_editarn)?$porcentaje_editarn:"No hay informacion") ?>"  required>
                                           </td>
                                         </tr>
                                         <?php if(!isset($_POST["enviar"]) ): ?>
                                             <tr>
                                               <th scope="row"></th>
                                               <td>
-                                                <input type="hidden" class="form-control" name="enviar" value="guardadoCabe">
-                                                <button type="submit" class="btn btn-success col-md-12" name="guardarCabTema" id="saveCab" style="margin-top:15px;">
-                                                        <i class="fas fa-fw fa-save" id="guardaravance"></i> Guardar Avance
+                                                <input type="hidden" class="form-control" name="enviaractualizaciontema" value="actualizadoCabetema">
+                                                <button type="submit" class="btn btn-warning col-md-12" name="actualizarCabTema" id="actualizarCabTema" style="margin-top:15px;">
+                                                        <i class="fas fa-fw fa-save" id="guardaravance"></i> Actualizar Avance
                                                 </button>
                                               </td>
                                             </tr>
@@ -137,7 +138,7 @@
 <?php
   require_once("vista/footer.php");
 }else{
-  header("Location:".Conectar::ruta_aulavirtual());
+  //header("Location:".Conectar::ruta_aulavirtual());
   exit();
 }
 ?>

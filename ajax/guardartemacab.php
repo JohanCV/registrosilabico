@@ -9,11 +9,11 @@
         //$row =0;
         $asis = $asistencia->registrar_asistencia_tema_cabecera($row,$_SESSION["nombreCab"],$_SESSION["facultadCab"],$_SESSION["escuelaCab"],$_SESSION["asignaturaCab"],
                                                                 $_SESSION["codasignaturaCAb"],$_SESSION["grupo"],$_SESSION["hora_inicial"],$_SESSION["hora_final"],
-                                                                $_SESSION["dia"], $_SESSION["correo"],$_SESSION["aula"],$_SESSION["semana"],$_POST["check_list_tema"],$_SESSION["porcentajeacu"]);
-        var_dump($_SESSION['estadoRegistroCab']);
-        if(isset($_SESSION['estadoRegistroCab']) && $_SESSION['estadoRegistroCab'] == true){echo "entre a estadoRegistroCab<br/>";
+                                                                $_SESSION["dia"], $_SESSION["correo"],$_SESSION["aula"],$_SESSION["semana"],$_POST["check_list_tema"],$_POST["porcentajeacu"]);
+        //var_dump($_SESSION['estadoRegistroCab']);
+        if(isset($_SESSION['estadoRegistroCab']) && $_SESSION['estadoRegistroCab'] == true){//echo "entre a estadoRegistroCab<br/>";
             $_SESSION["id_cabecera"] = $asistencia->getIdCabecera($_SESSION["correo"],$_SESSION["codasignaturaCAb"],$_SESSION["grupo"],$_SESSION["escuelaCab"]);
-            echo "id_cabecera: "; var_dump($_SESSION["id_cabecera"]);
+            //echo "id_cabecera: "; var_dump($_SESSION["id_cabecera"]);
         }
     }else{ //echo "no existel post <br/>";
         if($row != 0){
