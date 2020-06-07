@@ -65,7 +65,7 @@
                             <div class="col-md-12 my-auto">
                                 <div class="modal-dialog" role="document">
                                     <div class="modal-content">
-                                      <?php if(isset($_SESSION['estadoRegistroCab']) && $_SESSION['estadoRegistroCab'] == true): ?>
+                                      <?php if(isset($_SESSION['estadoRegistroCab']) && $_SESSION['estadoRegistroCab'] == false): ?>
                                         <form method="post">
                                             <div class="modal-body mx-3">
                                                 <h5>Su Tema Silabico fue registrado exitosamente.</h5>
@@ -82,7 +82,7 @@
 
                                             </div>
                                         </form>
-                                      <?php endif;if(isset($_SESSION['exitosoactualizaciontema']) && $_SESSION['exitosoactualizaciontema'] == false): ?>
+                                      <?php else: ?>
 
                                             <div class="modal-body mx-3">
                                                 <h5>Su Tema Silabico <strong> Ya Fue </strong> registrado exitosamente.</h5>
