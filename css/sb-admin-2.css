@@ -12766,7 +12766,7 @@ p {
 
 .login-body .login-card {
     background: #2d1f1f94;
-    width: 600px;
+    width: 800px  !important;
     margin: 0 auto;
 }
 

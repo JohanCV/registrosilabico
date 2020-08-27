@@ -6,8 +6,8 @@ class Conectar {
 
    	public function conexion(){
      		try {
-     			//$conectar = $this->dbh = new PDO("mysql:local=localhost;dbname=registrosilabico","root","");
-            $conectar = $this->dbh = new PDO("mysql:local=10.0.0.3;dbname=siac","dutic","dutic2019");
+     			$conectar = $this->dbh = new PDO("mysql:local=localhost;dbname=registrosilabico","root","");
+            // $conectar = $this->dbh = new PDO("mysql:local=localhost;dbname=registrosilabico","root","password");
     		     return $conectar;
 
      		} catch (Exception $e) {

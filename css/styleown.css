@@ -23,3 +23,23 @@ th,h5,i{
 #guardaravance{
   color: white;
 }
+
+.block1 {
+max-width: 400px;
+max-height: 300px;
+overflow:scroll;
+display: block;
+border: 1px solid #ccc;
+}
+
+.block2 {
+display: inline-block;
+vertical-align: top;
+overflow: hidden;
+border-right: 1px solid #a4a4a4;
+}
+#from {
+width: auto !important;
+min-width:400px;
+border : none !important;
+}

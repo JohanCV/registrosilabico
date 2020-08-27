@@ -1,7 +1,7 @@
 <?php
   require_once("config/conexion.php");
   //if (isset($_GET["value"])) {
-      //$emailmd5 = $_GET["value"];    
+      //$emailmd5 = $_GET["value"];
       (isset($_GET["op"])? $op = $_GET["op"]: "no hay opcion");
 
       require_once("vista/cabecera.php");
@@ -45,6 +45,10 @@
                                                             echo '<p class="lead text-gray-800 mb-5">Lo sentimos, No se encuentra en nuestra base de datos, comuniquese con el Administrador.</p>
                                                                     <p class="text-gray-500 mb-0"></p>';
                                                             break;
+                                                          case '4':
+                                                              echo '<p class="lead text-gray-800 mb-5">Lo sentimos, No se encuentra información de su curso, comunicarse con el Administrador de SISCAD.</p>
+                                                                      <p class="text-gray-500 mb-0"></p>';
+                                                              break;
 
                                                           default:
                                                             echo '<p class="lead text-gray-800 mb-5">Lo sentimos, ahora no tiene una clase programada.</p>

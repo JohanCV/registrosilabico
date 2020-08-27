@@ -20,6 +20,44 @@
           //echo "$email <br/>";
           $user_class->getDatosDocente($email);
           $temasilabico[] = $asistencia_class->get_tema_curso_docente($email);
+          $temasilabicos[] = $asistencia_class->get_tema_curso_docente_JSON($email);
+          foreach ($temasilabicos as $value) {
+              $contenido= $value[0]["contenido"];
+          }
+
+          //var_dump($contenido);
+          $temas_json = $asistencia_class->get_tema_JSON($contenido, $_SESSION["semana"]);
+          var_dump($temas_json);
+          echo "<br/>";
+          foreach((array)$temas_json as $valor){
+              echo 'nro_unidad = '.$valor->nro_unidad .'<br>';
+              if (is_array((array)$valor->nro_unidad)) {
+                  foreach ((array)$valor->capitulos as $value) {
+                      echo "&nbsp;&nbsp;&nbsp;&nbsp;";
+                      echo 'capitulos = '.$value->nro_capitulo.'<br>';
+                      if (is_array((array)$value->nro_capitulo)) {
+                          foreach ((array)$value->temas as $value2) {
+                              echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp";
+                              echo 'temas = '.$value2->nro_tema.'<br>';
+                              echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp";
+                              echo 'semana = '.$value2->semana.'<br>';
+                              if($value2->semana == 14){
+                                  echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp";
+                                  echo "Semana actual <br/>";
+                                  echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp";
+                                  echo 'tema = '.$value2->tema.'<br>';
+                                  echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp";
+                                  echo 'porcentaje acumulado = '.$value2->acumulado.'<br>';
+                                  $tema_semana = $value2->tema;
+                              }
+                          }
+                      }
+                  }
+              }
+          }
+          
+
+
           $_SESSION["correo"] = $email;
 
           (isset($_SESSION["porcentaje"])?$porcentaje = $_SESSION["porcentaje"]: $porcentaje = $_SESSION["semana"]*100/17); //echo $porcentaje;
@@ -92,7 +130,10 @@
                                         <tr>
                                           <th scope="row">Tema de avance</th>
                                           <td>
-                                                <select name="check_list_tema[]" multiple required>
+                                            <div class="block1">
+                                              <div class="block2">
+                                                <select id="from" name="check_list_tema[]" multiple required>
+                                                      <option value="<?= (isset($tema_semana)? $tema_semana:"No hay seleccion de temas. Verifique")?>"> <?= (isset($tema_semana)? $tema_semana:"No hay seleccion de temas") ?></option>';
                                                       <?php for($i = 0; $i < $_SESSION["row_cnt_temas_cap"]; $i++){
                                                               foreach ($temasilabico as $showtemasilabico) { ?>
                                                                   <option value="<?= (isset($showtemasilabico[$i]["tema"])? $showtemasilabico[$i]["tema"]:"No hay seleccion de temas. Verifique")?>"> <?= (isset($showtemasilabico[$i]["tema"])? $showtemasilabico[$i]["tema"]:"No hay seleccion de temas") ?></option>';
@@ -100,6 +141,8 @@
                                                       <?php   }
                                                             }?>
                                                   </select>
+                                                </div>
+                                              </div>
                                           </td>
                                         </tr>
                                         <tr>
