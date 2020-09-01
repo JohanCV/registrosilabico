@@ -27,27 +27,27 @@
 
           //var_dump($contenido);
           $temas_json = $asistencia_class->get_tema_JSON($contenido, $_SESSION["semana"]);
-          var_dump($temas_json);
-          echo "<br/>";
+          //var_dump($temas_json);
+          //echo "<br/>";
           foreach((array)$temas_json as $valor){
-              echo 'nro_unidad = '.$valor->nro_unidad .'<br>';
+              //echo 'nro_unidad = '.$valor->nro_unidad .'<br>';
               if (is_array((array)$valor->nro_unidad)) {
                   foreach ((array)$valor->capitulos as $value) {
-                      echo "&nbsp;&nbsp;&nbsp;&nbsp;";
-                      echo 'capitulos = '.$value->nro_capitulo.'<br>';
+                      // echo "&nbsp;&nbsp;&nbsp;&nbsp;";
+                      // echo 'capitulos = '.$value->nro_capitulo.'<br>';
                       if (is_array((array)$value->nro_capitulo)) {
                           foreach ((array)$value->temas as $value2) {
-                              echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp";
-                              echo 'temas = '.$value2->nro_tema.'<br>';
-                              echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp";
-                              echo 'semana = '.$value2->semana.'<br>';
+                              // echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp";
+                              // echo 'temas = '.$value2->nro_tema.'<br>';
+                              // echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp";
+                              // echo 'semana = '.$value2->semana.'<br>';
                               if($value2->semana == 14){
-                                  echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp";
-                                  echo "Semana actual <br/>";
-                                  echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp";
-                                  echo 'tema = '.$value2->tema.'<br>';
-                                  echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp";
-                                  echo 'porcentaje acumulado = '.$value2->acumulado.'<br>';
+                                  // echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp";
+                                  // echo "Semana actual <br/>";
+                                  // echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp";
+                                  // echo 'tema = '.$value2->tema.'<br>';
+                                  // echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp";
+                                  // echo 'porcentaje acumulado = '.$value2->acumulado.'<br>';
                                   $tema_semana = $value2->tema;
                               }
                           }
@@ -55,7 +55,7 @@
                   }
               }
           }
-          
+
 
 
           $_SESSION["correo"] = $email;
@@ -157,7 +157,7 @@
                                               <th scope="row"></th>
                                               <td>
                                                 <input type="hidden" class="form-control" name="enviar" value="guardadoCabe">
-                                                <button type="submit" class="btn btn-success col-md-12" name="guardarCabTema" id="saveCab" style="margin-top:15px;">
+                                                <button type="submit" class="btn btn-success-own col-md-12" name="guardarCabTema" id="saveCab" style="margin-top:15px;">
                                                         <i class="fas fa-fw fa-save" id="guardaravance"></i> Guardar Avance
                                                 </button>
                                               </td>

@@ -720,6 +720,7 @@ pre code {
 .col-xl-auto {
     position: relative;
     width: 100%;
+    height: 100%;
     padding-right: 0.75rem;
     padding-left: 0.75rem;
 }
@@ -9146,10 +9147,10 @@ button.bg-dark:focus {
     margin: auto !important;
 }
 
-.mt-auto,
+/* .mt-auto,
 .my-auto {
     margin-top: auto !important;
-}
+} */
 
 .mr-auto,
 .mx-auto {
@@ -12458,7 +12459,7 @@ body.sidebar-toggled footer.sticky-footer {
 
 .docente-card {
     width: 80%;
-    margin: 70px auto;
+    margin: 50px auto;
 }
 
 h1,
@@ -12754,18 +12755,18 @@ p {
 }
 
 .login-body {
-    background: url(../img/fondo.jpg);
+    background: url(../img/fondo2.png);
     background-size: cover;
-    background-position: bottom;
+    background-position: top;
 }
 
 .login-body .login-container {
-    background: #7777774f;
+    background: #black;
     width: 100%;
 }
 
 .login-body .login-card {
-    background: #2d1f1f94;
+    background: #black;
     width: 800px  !important;
     margin: 0 auto;
 }

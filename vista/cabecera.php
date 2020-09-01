@@ -19,3 +19,8 @@
  <link href="css/sb-admin-2.min.css" rel="stylesheet">
  <link rel="stylesheet" href="./css/styleown.css">
 </head>
+<nav class="navbar navbar-light">
+  <a class="navbar-brand" href="#">
+    <img src="./img/logos7.png"  height="60" alt="" loading="lazy">
+  </a>
+</nav>
