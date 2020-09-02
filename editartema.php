@@ -16,13 +16,17 @@
       if($email != "nomatch"){
           //echo "$email <br/>";
           $user_class->getDatosDocente($email);
-          $temasilabico[] = $asistencia_class->get_tema_curso_docente($email);
+          //$temasilabico[] = $asistencia_class->get_tema_curso_docente($email);
           $porcentaje_editar = $asistencia_class->get_datos_asistencia_tema_cabecera_registrado($email,$idoc);
+          //var_dump($porcentaje_editar);
           if ($porcentaje_editar) {
               foreach ($porcentaje_editar as $showporcentaje_editar) {
-                    $porcentaje_editarn = $showporcentaje_editar["porcentaje"]; //var_dump($porcentaje_editarn);
+                    $porcentaje_editarn = $showporcentaje_editar["porcentaje"];
+                    $tema_editarn["tema"] =  $showporcentaje_editar["tema"];//var_dump($porcentaje_editarn);
               }
           }
+          //echo "</br>";
+          //var_dump($tema_editarn);
           //$_SESSION["correo"] = $email;
           //var_dump($temasilabico);
           //echo count($temasilabico);
@@ -94,12 +98,12 @@
                                           <th scope="row">Tema de avance</th>
                                           <td>
                                                   <select name="check_list_tema[]" multiple required>
-                                                      <?php for($i = 0; $i < $_SESSION["row_cnt_temas_cap"]; $i++){
-                                                              foreach ($temasilabico as $showtemasilabico) { ?>
-                                                                  <option value="<?= (isset($showtemasilabico[$i]["tema"])? $showtemasilabico[$i]["tema"]:"No hay seleccion de temas. Verifique")?>"> <?= (isset($showtemasilabico[$i]["tema"])? $showtemasilabico[$i]["tema"]:"No hay seleccion de temas") ?></option>';
+                                                      <?php //for($i = 0; $i < $_SESSION["row_cnt_temas_cap"]; $i++){
+                                                              //foreach ($tema_editarn as $showtemasilabico) {  var_dump($showtemasilabico);?>
+                                                                  <option value="<?= (isset($tema_editarn["tema"])? $tema_editarn["tema"]:"No hay seleccion de temas. Verifique")?>"> <?= (isset($tema_editarn["tema"])? $tema_editarn["tema"]:"No hay seleccion de temas") ?></option>';
                                                                   <option style="font-size: 1%; background-color: #858796;" disabled>&nbsp;</option>
-                                                      <?php   }
-                                                            }?>
+                                                      <?php   //}
+                                                            //}?>
                                                   </select>
                                           </td>
                                         </tr>

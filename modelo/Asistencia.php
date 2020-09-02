@@ -64,7 +64,7 @@
               $sql->bindValue(5, $_SESSION["grupo"]);             //var_dump($_SESSION["grupo"]);
               $sql->execute();
 
-              $row_cnt = $sql->rowCount();                          //var_dump($row_cnt); echo "<br/>";
+              $row_cnt = $sql->rowCount(); var_dump($row_cnt);                          //var_dump($row_cnt); echo "<br/>";
               $resultado_temas = $sql->fetchAll(PDO::FETCH_ASSOC);  //var_dump($resultado_temas);
           }else {
             echo "el correo esta vacio";
@@ -73,7 +73,7 @@
           if ($resultado_temas) { //var_dump($resultado_temas);
                 $tema = $resultado_temas;
                 $_SESSION["porcentaje"]= $tema[0]["porcentaje"];
-                $_SESSION["row_cnt_temas_cap"] = $row_cnt;
+                $_SESSION["row_cnt_temas_cap"] = $row_cnt; //var_dump($_SESSION["row_cnt_temas_cap"]);
                 //var_dump($tema);
           }else {
                 //echo $tema;
@@ -211,7 +211,7 @@
                 $correo = $correo;
                 $idtemaregistrado = $idtemaregistrado;
 
-                $sql="SELECT porcentaje FROM `asistencia_cabecera` WHERE `facultad` = ? AND `programa` = ? AND `asignatura` = ? AND `codasig`= ?
+                $sql="SELECT porcentaje, tema FROM `asistencia_cabecera` WHERE `facultad` = ? AND `programa` = ? AND `asignatura` = ? AND `codasig`= ?
                       AND `grupo` = ? AND `hora_ini`= ? AND `fecha`=CURDATE() AND `correo`= ? AND id =?";
 
                 $sql=$conectar->prepare($sql);
@@ -227,7 +227,17 @@
 
                 $row_cnt = $sql->rowCount();
                 $resultado = $sql->fetchAll(PDO::FETCH_ASSOC);    //var_dump($resultado);
-                return $resultado;
+
+                if ($resultado) { //var_dump($resultado_temas);
+                      $tema = $resultado;
+                      $_SESSION["porcentaje"]= $tema[0]["porcentaje"];
+                      $_SESSION["row_cnt_temas_cap"] = $row_cnt; //var_dump($_SESSION["row_cnt_temas_cap"]);
+                      //var_dump($tema);
+                }else {
+                      //echo $tema;
+                      $tema = "algun dato no es correcto, o no esta en la semana correspondiente para obtener el tema de la semana";
+                }
+                return $tema;
         }
 
         public function actualizarTemaRegistrado($tema, $porcentaje){
