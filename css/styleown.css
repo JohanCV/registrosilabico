@@ -25,9 +25,9 @@ th,h5,i{
 }
 
 .block1 {
-max-width: 400px;
+max-width: 100%;
 max-height: 300px;
-overflow:scroll;
+overflow:hidden;
 display: block;
 border: 1px solid #ccc;
 }
