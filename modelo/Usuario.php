@@ -53,8 +53,8 @@ class Usuario extends Conectar {
                         and dutic_matriculados_20.grupo = dutic_docentes_20.grupo
                         and dutic_docentes_20.grupo=dutic_horarios_20.grupo
                         #and dutic_horarios_20.dia = WEEKDAY(CURDATE())+1
-                        and dutic_horarios_20.dia = 1
-                        and CAST('07:45' AS time)
+                        and dutic_horarios_20.dia = 4
+                        and CAST('20:15' AS time)
                         #and  time (NOW())
                         BETWEEN CAST(dutic_horarios_20.hora_ini AS time) AND DATE_SUB(CAST(dutic_horarios_20.hora_fin AS time), INTERVAL 1 MINUTE)
                         and dutic_docentes_20.correo = ?

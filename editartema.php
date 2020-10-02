@@ -92,7 +92,7 @@
                                         </tr>
                                         <tr>
                                           <th scope="row">Semana</th>
-                                          <td><?php $semanas=date("W"); $_SESSION["semana"]= $semanas -16;  echo (isset($_SESSION["semana"])? $_SESSION["semana"]:"No hay información"); ?></td>
+                                          <td><?php $semanas=date("W"); $_SESSION["semana"]= $semanas -36;  echo (isset($_SESSION["semana"])? $_SESSION["semana"]:"No hay información"); ?></td>
                                         </tr>
                                         <tr>
                                           <th scope="row">Tema de avance</th>

@@ -51,20 +51,21 @@
           if (!empty($correo)) {
               //solo obtengo el JSON
               $sql = "SELECT dutic_silabo_20.nues, dutic_silabo_20.casi, dutic_silabo_20.codper, dutic_silabo_20.contenido
-                      FROM dutic_silabo_20 INNER JOIN dutic_docentes_20
+                      FROM dutic_silabo_20
+                      INNER JOIN dutic_docentes_20
                       ON dutic_docentes_20.codper = dutic_silabo_20.codper
-                      WHERE dutic_docentes_20.correo =? and dutic_docentes_20.escuela =? and dutic_docentes_20.codasig =?
-                            and dutic_docentes_20.asignatura = ? and dutic_docentes_20.grupo = ?";
+                      and dutic_docentes_20.codasig =  dutic_silabo_20.casi
+                      WHERE dutic_docentes_20.correo =? and dutic_docentes_20.escuela =?
+                      and dutic_docentes_20.asignatura = ? and dutic_docentes_20.grupo = ?";
               $sql = $conectar->prepare($sql);
 
               $sql->bindValue(1, $email);                         //var_dump($email);
               $sql->bindValue(2, $_SESSION["escuelaCab"]);        //var_dump($_SESSION["escuelaCab"]);
-              $sql->bindValue(3, $_SESSION["codasignaturaCAb"]);  //var_dump($_SESSION["codasignaturaCAb"]);
-              $sql->bindValue(4, $_SESSION["asignaturaCab"]);     //var_dump($_SESSION["asignaturaCab"]);
-              $sql->bindValue(5, $_SESSION["grupo"]);             //var_dump($_SESSION["grupo"]);
+              $sql->bindValue(3, $_SESSION["asignaturaCab"]);     //var_dump($_SESSION["asignaturaCab"]);
+              $sql->bindValue(4, $_SESSION["grupo"]);             //var_dump($_SESSION["grupo"]);
               $sql->execute();
 
-              $row_cnt = $sql->rowCount(); var_dump($row_cnt);                          //var_dump($row_cnt); echo "<br/>";
+              $row_cnt = $sql->rowCount(); //var_dump($row_cnt);    //var_dump($row_cnt); echo "<br/>";
               $resultado_temas = $sql->fetchAll(PDO::FETCH_ASSOC);  //var_dump($resultado_temas);
           }else {
             echo "el correo esta vacio";

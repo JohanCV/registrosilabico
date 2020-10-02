@@ -41,7 +41,7 @@
                               // echo 'temas = '.$value2->nro_tema.'<br>';
                               // echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp";
                               // echo 'semana = '.$value2->semana.'<br>';
-                              if($value2->semana == 14){
+                              if($value2->semana == $_SESSION["semana"]){
                                   // echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp";
                                   // echo "Semana actual <br/>";
                                   // echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp";
@@ -125,7 +125,7 @@
                                         </tr>
                                         <tr>
                                           <th scope="row">Semana</th>
-                                          <td><?php $semanas=date("W"); $_SESSION["semana"]= $semanas -16;  echo (isset($_SESSION["semana"])? $_SESSION["semana"]:"No hay información"); ?></td>
+                                          <td><?php $semanas=date("W"); $_SESSION["semana"]= $semanas -36;  echo (isset($_SESSION["semana"])? $_SESSION["semana"]:"No hay información"); ?></td>
                                         </tr>
                                         <tr>
                                           <th scope="row">Tema de avance</th>
