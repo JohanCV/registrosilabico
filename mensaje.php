@@ -21,7 +21,7 @@
             <div class="row">
               <!-- informacion derecha -->
               <div class="col-lg-12 text-white">
-                <form method="POST" action="temaregistrado.php">
+                <!--form method="POST" action="temaregistrado.php"-->
                    <div class="docente-card text-white mb-3">
                      <div class="card-body">
                        <h3 class="card-title text-center">Registro Silábico</h3>
@@ -29,7 +29,7 @@
                              <div class="col-md-12 my-auto">
                                  <div class="modal-dialog" role="document">
                                      <div class="modal-content">
-                                         <form method="post">
+                                         <!--form method="post"-->
                                              <div class="modal-body mx-3">
                                                  <!-- Texto NO hay clase programada -->
                                                  <div class="text-center message-text">
@@ -59,20 +59,21 @@
                                                  </div>
                                              </div>
                                              <div class="modal-footer d-flex justify-content-center">
-                                               <form action="" method="post">
+                                               <!--form action="" method="post"-->
+                                                    <a href= "https://aulavirtual.unsa.edu.pe/aulavirtual">
                                                     <button type="submit" id="btnTerminarTema" name='btnTerminarTema'
-                                                            value="Terminar Tema" class="btn btn-danger">Volver<a href= "https://aulavirtual.unsa.edu.pe/aulavirtual/"></a>
-                                                    </button>
-                                               </form>
+                                                            value="Terminar Tema" class="btn btn-danger">Volver
+                                                    </button></a>
+                                               <!--/form-->
                                              </div>
-                                         </form>
+                                         <!--/form-->
                                      </div>
                                  </div>
                              </div>
                          </div>
                      </div>
                      </div>
-                 </form>
+                 <!--/form-->
               </div>
             </div>
           </div>

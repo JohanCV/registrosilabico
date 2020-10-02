@@ -21,9 +21,9 @@ class Conectar {
   	 	 return $this->dbh->query("SET NAMES 'utf8'");
   	}
 
-  	public function ruta_aulavirtual(){
-  	  	return "http://190.119.145.175/miaula/";
-  	}
+  	// public function ruta_aulavirtual(){
+  	//   	return "https://aulavirtual.unsa.edu.pe/aulavirtual";
+  	// }
 
   	//Ruta para el localhost
   	public function ruta(){
