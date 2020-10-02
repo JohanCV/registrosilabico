@@ -3,7 +3,7 @@
   //if (isset($_GET["value"])) {
       //$emailmd5 = $_GET["value"];
       (isset($_GET["op"])? $op = $_GET["op"]: "no hay opcion");
-
+      //var_dump($_GET["op"]); var_dump($op);
       require_once("vista/cabecera.php");
  ?>
  <body class="bg-gradient-primary login-body">
@@ -35,14 +35,14 @@
                                                  <div class="text-center message-text">
                                                    <i class="fas fa-sad-cry fa-6x"></i>
                                                    <?php
-                                                        $op="";
+                                                        $op= $op;
                                                         switch ($op) {
                                                           case '2':
                                                             echo '<p class="lead text-gray-800 mb-5">Lo sentimos, tiene un conflicto de horario de clases programadas. Por favor comuniquese con DUFA para corregir sus horarios.</p>
                                                                   <p class="text-gray-500 mb-0"></p>';
                                                             break;
                                                           case '3':
-                                                            echo '<p class="lead text-gray-800 mb-5">Lo sentimos, No se encuentra en nuestra base de datos, comuniquese con el Administrador.</p>
+                                                            echo '<p class="lead text-gray-800 mb-5">Lo sentimos, No se encuentra en nuestra base de datos, comuniquese con el Administrador de DUFA.</p>
                                                                     <p class="text-gray-500 mb-0"></p>';
                                                             break;
                                                           case '4':
@@ -61,7 +61,7 @@
                                              <div class="modal-footer d-flex justify-content-center">
                                                <form action="" method="post">
                                                     <button type="submit" id="btnTerminarTema" name='btnTerminarTema'
-                                                            value="Terminar Tema" class="btn btn-danger">Volver<a href=<?php Conectar::ruta_aulavirtual(); ?>></a>
+                                                            value="Terminar Tema" class="btn btn-danger">Volver<a href= "https://aulavirtual.unsa.edu.pe/aulavirtual/"></a>
                                                     </button>
                                                </form>
                                              </div>

@@ -9,9 +9,6 @@
       }
   }
 
-  if (isset(($_POST["btnEditarTema"]))) {
-      require_once('ajax/editartemaregistrado.php');
-  }
   if (isset($_SESSION["nombreCab"]) and isset($_SESSION["facultadCab"]) and isset($_SESSION["escuelaCab"]) AND
       isset($_SESSION["asignaturaCab"]) and isset($_SESSION["codasignaturaCAb"]) and isset($_SESSION["grupo"])AND
       isset($_SESSION["aula"]) and isset($_SESSION["semana"])  ) {
@@ -25,7 +22,9 @@
       //var_dump($_SESSION['estadoRegistroCab']);
       // var_dump($_SESSION['exitosoactualizaciontema']);
       //var_dump($mostrar_tema);
-
+      if (isset(($_POST["btnEditarTema"]))) {
+          require_once('ajax/editartemaregistrado.php');
+      }
 
       //guardamos la informacion que viene del submit guardarCabTema
       if (isset($_POST["guardarCabTema"])) { //var_dump($_POST["guardarCabTema"]); //echo "entre a guardarCabTema <br/>";
