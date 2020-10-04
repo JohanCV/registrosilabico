@@ -37,6 +37,10 @@
                                                    <?php
                                                         $op= $op;
                                                         switch ($op) {
+                                                          case '1':
+                                                            echo '<p class="lead text-gray-800 mb-5">Lo sentimos, Ingreso de una forma inadecuada</p>
+                                                                  <p class="text-gray-500 mb-0"></p>';
+                                                            break;
                                                           case '2':
                                                             echo '<p class="lead text-gray-800 mb-5">Lo sentimos, tiene un conflicto de horario de clases programadas. Por favor comuniquese con DUFA para corregir sus horarios.</p>
                                                                   <p class="text-gray-500 mb-0"></p>';
@@ -62,7 +66,7 @@
                                                <!--form action="" method="post"-->
                                                     <a href= "https://aulavirtual.unsa.edu.pe/aulavirtual">
                                                     <button type="submit" id="btnTerminarTema" name='btnTerminarTema'
-                                                            value="Terminar Tema" class="btn btn-danger">Volver
+                                                            value="Terminar Tema" class="btn btn-danger">Volver al Aula Virtual
                                                     </button></a>
                                                <!--/form-->
                                              </div>

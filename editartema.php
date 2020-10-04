@@ -6,40 +6,43 @@
   $user_class = new Usuario();
   $asistencia_class = new Asistencia();
 
-  if (isset($_GET["value"]) AND isset($_GET["idoc"])) {
-      $email_md5 = $_GET["value"];
-      $idoc = $_GET["idoc"];
-      //echo "$emailmd5";
-      //echo "<br/> PROBANDO";
-      //capturo el email de quien inicia sesion
-      $email = $user_class->getEmailMd5($email_md5);
-      if($email != "nomatch"){
-          //echo "$email <br/>";
-          $user_class->getDatosDocente($email);
-          //$temasilabico[] = $asistencia_class->get_tema_curso_docente($email);
-          $porcentaje_editar = $asistencia_class->get_datos_asistencia_tema_cabecera_registrado($email,$idoc);
-          //var_dump($porcentaje_editar);
-          if ($porcentaje_editar) {
-              foreach ($porcentaje_editar as $showporcentaje_editar) {
-                    $porcentaje_editarn = $showporcentaje_editar["porcentaje"];
-                    $tema_editarn["tema"] =  $showporcentaje_editar["tema"];//var_dump($porcentaje_editarn);
-              }
-          }
-          //echo "</br>";
-          //var_dump($tema_editarn);
-          //$_SESSION["correo"] = $email;
-          //var_dump($temasilabico);
-          //echo count($temasilabico);
-          //var_dump($_SESSION["row_cnt_temas_cap"] );
-          //var_dump($porcentaje_editar);
-      }else {
-          //header("Location:".Conectar::ruta_aulavirtual());
-          header("Location:".Conectar::ruta()."mensaje.php?op=3");
-          //echo "email es igual nomatch: no existe el email en nuestra base de datos";
-      }
+  $semanas=date("W");
 
-      //(isset($_SESSION["porcentaje"])?$porcentaje = $_SESSION["porcentaje"]:  $_SESSION["semana"]*100/17);
-      //(isset($rpta)? $rpta = 0 : $rpta = number_format($porcentaje));
+  if (isset($_GET["value"]) AND !empty($_GET["value"]) AND isset($_GET["idoc"]) AND  !empty($_GET["idoc"])) {
+      $email_md5 = $_GET["value"];
+      $idoc = $_GET["idoc"];          //var_dump($_GET["idoc"]);
+      $url_accion = "temaregistrado.php?iddocupdate=".$idoc."";
+      //capturo el email de quien inicia sesion
+      $email = $user_class->getEmailMd5_login($email_md5);
+      if($email){ //echo "$email <br/>"; var_dump($email);
+          $datos_docente = $user_class->getDatosDocente($email);
+          $datos_docente["semana"]= $semanas -36;
+
+          $facu = $datos_docente["facultad"];
+          $escu = $datos_docente["escuela"];
+          $asig = $datos_docente["asignatura"];
+          $codasig = $datos_docente["codasig"];
+          $grupo = $datos_docente["grupo"];
+          $horaini = $datos_docente["hora_ini"];
+          if (isset($email) && !empty($email) && isset($facu) && !empty($facu) && isset($escu) && !empty($escu) && isset($asig) && !empty($asig)
+              && isset($codasig) && !empty($codasig) && isset($grupo) && !empty($grupo) && isset($horaini) && !empty($horaini)) {
+
+              $porcentaje_editar = $asistencia_class->get_datos_asistencia_tema_cabecera_registrado($email,$idoc,$datos_docente["facultad"], $datos_docente["escuela"], $datos_docente["asignatura"], $datos_docente["codasig"], $datos_docente["grupo"], $datos_docente["hora_ini"]);
+              //var_dump($porcentaje_editar);
+
+              if (isset($porcentaje_editar)) {
+                  foreach ($porcentaje_editar as $showporcentaje_editar) {
+                        $porcentaje_editarn = $showporcentaje_editar["porcentaje"]; //var_dump($porcentaje_editarn);
+                        $tema_editarn["tema"] =  $showporcentaje_editar["tema"];
+                  }
+              }
+          }else {
+              echo "estan mal los datos para obtener el tema y porcentaje ";
+          }
+      }else {
+        //echo "email es igual false: no existe el email en nuestra base de datos busque a DUFA";
+          header("Location:".Conectar::ruta()."mensaje.php?op=3");
+      }
 
       require_once("vista/cabecera.php");
  ?>
@@ -58,7 +61,7 @@
            <div class="row">
              <!-- informacion derecha -->
              <div class="col-lg-12 text-white">
-               <form method="POST" action="temaregistrado.php">
+               <form method="POST" action="<?=$url_accion?>">
                   <div class="docente-card text-white mb-3">
                     <div class="card-body">
                       <h3 class="card-title text-center">Registro Silábico</h3>
@@ -67,43 +70,44 @@
                                 <table class="table table-sm text-uppercase table-info-asistencia">
                                     <tbody>
                                         <tr>
-                                           <th scope="row">Docente</th>
-                                           <td><b><?= (isset($_SESSION["nombreCab"])? $_SESSION["nombreCab"]:"No hay información"); ?></b></td>
+                                           <th scope="row">Docente</th><input type="hidden" name="docente" value="<?= $datos_docente["nombres"] ?>" />
+                                           <td><b><?= (isset($datos_docente["nombres"])? $datos_docente["nombres"]:"No hay información"); ?></b></td>
                                         </tr>
                                         <tr>
-                                          <th scope="row">Facultad</th>
-                                          <td><?= (isset($_SESSION["facultadCab"])? $_SESSION["facultadCab"]:"No hay información"); ?></td>
+                                          <th scope="row">Facultad</th><input type="hidden" name="facultad" value="<?=$datos_docente["facultad"]?>" />
+                                          <td><?= (isset($datos_docente["facultad"])? $datos_docente["facultad"]:"No hay información"); ?></td>
                                         </tr>
                                         <tr>
-                                          <th scope="row">Programa Profesional</th>
-                                          <td><?= (isset($_SESSION["escuelaCab"])? $_SESSION["escuelaCab"] :"No hay información"); ?></td>
+                                          <th scope="row">Programa Profesional</th><input type="hidden" name="escuela" value="<?=$datos_docente["escuela"]?>" />
+                                          <td><?=(isset($datos_docente["escuela"])? $datos_docente["escuela"] :"No hay información"); ?></td>
                                         </tr>
                                         <tr>
-                                          <th scope="row">Curso</th>
-                                          <td class="h5"><b><?= (isset($_SESSION["asignaturaCab"])? $_SESSION["asignaturaCab"]:"No hay información"); ?></b></td>
+                                          <th scope="row">Curso</th><input type="hidden" name="asignatura" value="<?=$datos_docente["asignatura"]?>" />
+                                          <td class="h5"><b><?= (isset($datos_docente["asignatura"])? $datos_docente["asignatura"]:"No hay información"); ?></b></td>
                                         </tr>
                                         <tr>
-                                          <th scope="row">Código</th>
-                                          <td><?= (isset($_SESSION["codasignaturaCAb"])? $_SESSION["codasignaturaCAb"]:"No hay información"); ?></td>
+                                          <th scope="row">Código</th><input type="hidden" name="codasig" value="<?=$datos_docente["codasig"]?>" />
+                                          <td><?= (isset($datos_docente["codasig"])? $datos_docente["codasig"]:"No hay información"); ?></td>
                                         </tr>
                                         <tr>
-                                          <th scope="row">Grupo</th>
-                                          <td><?= (isset($_SESSION["grupo"])? $_SESSION["grupo"]:"No hay información"); ?></td>
+                                          <th scope="row">Grupo</th><input type="hidden" name="grupo" value="<?=$datos_docente["grupo"]?>"  />
+                                                                    <input type="hidden" name="aula" value="<?=$datos_docente["aula"]?>"  />
+                                                                    <input type="hidden" name="hora_inicial" value="<?=$datos_docente["hora_ini"]?>"  />
+                                                                    <input type="hidden" name="hora_final" value="<?=$datos_docente["hora_fin"]?>"  />
+                                                                    <input type="hidden" name="dia" value="<?=$datos_docente["dia"]?>"  />
+                                                                    <input type="hidden" name="correo_docente" value="<?=$email_docente?>"  />
+                                          <td><?= (isset($datos_docente["grupo"])? $datos_docente["grupo"]:"No hay información"); ?></td>
                                         </tr>
                                         <tr>
-                                          <th scope="row">Semana</th>
-                                          <td><?php $semanas=date("W"); $_SESSION["semana"]= $semanas -36;  echo (isset($_SESSION["semana"])? $_SESSION["semana"]:"No hay información"); ?></td>
+                                          <th scope="row">Semana</th><input type="hidden" name="semana" value="<?=$datos_docente["semana"]?>"  />
+                                          <td><?php echo (isset($datos_docente["semana"])? $datos_docente["semana"]:"No hay información"); ?></td>
                                         </tr>
                                         <tr>
                                           <th scope="row">Tema de avance</th>
                                           <td>
                                                   <select name="check_list_tema[]" multiple required>
-                                                      <?php //for($i = 0; $i < $_SESSION["row_cnt_temas_cap"]; $i++){
-                                                              //foreach ($tema_editarn as $showtemasilabico) {  var_dump($showtemasilabico);?>
                                                                   <option value="<?= (isset($tema_editarn["tema"])? $tema_editarn["tema"]:"No hay seleccion de temas. Verifique")?>"> <?= (isset($tema_editarn["tema"])? $tema_editarn["tema"]:"No hay seleccion de temas") ?></option>';
                                                                   <option style="font-size: 1%; background-color: #858796;" disabled>&nbsp;</option>
-                                                      <?php   //}
-                                                            //}?>
                                                   </select>
                                           </td>
                                         </tr>
@@ -143,6 +147,7 @@
   require_once("vista/footer.php");
 }else{
   //header("Location:".Conectar::ruta_aulavirtual());
-  exit();
+  //exit();
+  echo "no coloque datos que no corresponden";
 }
 ?>

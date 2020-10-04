@@ -5,76 +5,54 @@
 
   $user_class = new Usuario();
   $asistencia_class = new Asistencia();
-  $row = $asistencia_class->get_asistencia_tema_cabecera();
-  //echo "$row";
-  if ($row != 0) {
-      header("Location:".Conectar::ruta()."temaregistrado.php");
-  }
-  if (isset($_GET["value"])) {
-      $email_md5 = $_GET["value"];
-      //echo "$emailmd5";
-      //echo "<br/> PROBANDO";
-      //capturo el email de quien inicia sesion
-      $email = $user_class->getEmailMd5($email_md5);
-      if($email != "nomatch"){
-          //echo "$email <br/>";
-          $user_class->getDatosDocente($email);
-          $temasilabico[] = $asistencia_class->get_tema_curso_docente($email);
-          $temasilabicos[] = $asistencia_class->get_tema_curso_docente_JSON($email);
-          foreach ($temasilabicos as $value) {
-              $contenido= $value[0]["contenido"];
-          }
 
-          //var_dump($contenido);
-          $temas_json = $asistencia_class->get_tema_JSON($contenido, $_SESSION["semana"]);
-          //var_dump($temas_json);
-          //echo "<br/>";
-          foreach((array)$temas_json as $valor){
-              //echo 'nro_unidad = '.$valor->nro_unidad .'<br>';
-              if (is_array((array)$valor->nro_unidad)) {
-                  foreach ((array)$valor->capitulos as $value) {
-                      // echo "&nbsp;&nbsp;&nbsp;&nbsp;";
-                      // echo 'capitulos = '.$value->nro_capitulo.'<br>';
-                      if (is_array((array)$value->nro_capitulo)) {
-                          foreach ((array)$value->temas as $value2) {
-                              // echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp";
-                              // echo 'temas = '.$value2->nro_tema.'<br>';
-                              // echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp";
-                              // echo 'semana = '.$value2->semana.'<br>';
-                              if($value2->semana == $_SESSION["semana"]){
-                                  // echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp";
-                                  // echo "Semana actual <br/>";
-                                  // echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp";
-                                  // echo 'tema = '.$value2->tema.'<br>';
-                                  // echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp";
-                                  // echo 'porcentaje acumulado = '.$value2->acumulado.'<br>';
-                                  $tema_semana = $value2->tema;
-                              }
-                          }
-                      }
-                  }
-              }
-          }
+  $semanas=date("W");
 
+    if (isset($_GET["value"])) {
+        $email_md5 = $_GET["value"];
+        $email_docente = $user_class->getEmailMd5_login($email_md5); //var_dump($email); die;
 
+        if($email_docente){//echo "entre email"; die();
+            $_SESSION['indentificacion'] = $email_docente; //var_dump($_SESSION['indentificacion']);
 
-          $_SESSION["correo"] = $email;
+            $datos_docente = $user_class->getDatosDocente($email_docente); //var_dump($datos_docente); die;
+            $datos_docente["semana"]= $semanas -36;
 
-          (isset($_SESSION["porcentaje"])?$porcentaje = $_SESSION["porcentaje"]: $porcentaje = $_SESSION["semana"]*100/17); //echo $porcentaje;
-          (isset($rpta)? $rpta = 0 : $rpta = number_format($porcentaje));
+            //row verifica si existe un registro del registro de asistencia silabico, si existe lo mandamos a temaregistrado.php
+            $row = $asistencia_class->get_asistencia_tema_cabecera($datos_docente["facultad"], $datos_docente["escuela"], $datos_docente["asignatura"], $datos_docente["codasig"], $datos_docente["grupo"], $datos_docente["hora_ini"], $datos_docente["hora_fin"], $datos_docente["dia"], $_SESSION['indentificacion']);
+            if ($row != 0 and $_SESSION['indentificacion'] == $email_docente) {
+              //$_SESSION["idcabeceracontinuo"] = $asistencia_class->getIdCabecera($_SESSION["indentificacion"],$datos_docente["codasig"], $datos_docente["grupo"],$datos_docente["escuela"],$datos_docente["hora_ini"], $datos_docente["hora_fin"]);
+              $idoc_yagua = $asistencia_class->getIdCabecera($_SESSION["indentificacion"],$datos_docente["codasig"], $datos_docente["grupo"],$datos_docente["escuela"],$datos_docente["hora_ini"], $datos_docente["hora_fin"]);
+              //echo "id_cabecera_dspues_logout: "; var_dump($_SESSION["idcabeceracontinuo"]); die();
+              header("Location:".Conectar::ruta()."temaregistrado.php?idoc_ind_yagua=".$idoc_yagua."");
+            }
+            //row fin
 
-          //echo $_SESSION["semana"]."<br/>";
-          //echo $_SESSION["porcentaje"];
-          //var_dump($temasilabico);
-          //echo count($temasilabico);
-          //var_dump($_SESSION["row_cnt_temas_cap"] );
-      }else {
-          //header("Location:".Conectar::ruta_aulavirtual());
-          header("Location:".Conectar::ruta()."mensaje.php?op=3");
-          //echo "email es igual nomatch: no existe el email en nuestra base de datos";
-      }
+            $temasilabicos[] = $asistencia_class->get_tema_curso_docente_JSON($email_docente,$datos_docente["escuela"],$datos_docente["asignatura"],$datos_docente["grupo"]); //var_dump($temasilabicos); die();
+            foreach ($temasilabicos as $value) {
+                $contenido= $value[0]["contenido"];
+            }
 
-      require_once("vista/cabecera.php");
+            $temas_json = $asistencia_class->get_tema_JSON($contenido, $datos_docente["semana"]);
+            foreach((array)$temas_json as $valor){
+                if (is_array((array)$valor->nro_unidad)) {
+                    foreach ((array)$valor->capitulos as $value) {
+                        if (is_array((array)$value->nro_capitulo)) {
+                            foreach ((array)$value->temas as $value2) {
+                                if($value2->semana == $datos_docente["semana"]){
+                                    $tema_semana = $value2->tema;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }else {
+            //echo "email es igual false: no existe el email en nuestra base de datos busque a DUFA";
+            header("Location:".Conectar::ruta()."mensaje.php?op=3");
+        }
+
+        require_once("vista/cabecera.php");
  ?>
 <body class="bg-gradient-primary login-body">
 
@@ -97,35 +75,40 @@
                       <h3 class="card-title text-center">Registro Silábico</h3>
                         <div class="row h-100 text-center">
                             <div class="col-md-12 my-auto">
-                                <table class="table table-sm text-uppercase table-info-asistencia">
+                                <table class="table table-sm text-uppercase table-info-asistencia" name="tabla">
                                     <tbody>
                                         <tr>
-                                           <th scope="row">Docente</th>
-                                           <td><b><?= (isset($_SESSION["nombreCab"])? $_SESSION["nombreCab"]:"No hay información"); ?></b></td>
+                                           <th scope="row">Docente</th><input type="hidden" name="docente" value="<?= $datos_docente["nombres"] ?>" />
+                                           <td ><b><?= (isset($datos_docente["nombres"])? $datos_docente["nombres"]:"No hay información"); ?></b></td>
                                         </tr>
                                         <tr>
-                                          <th scope="row">Facultad</th>
-                                          <td><?= (isset($_SESSION["facultadCab"])? $_SESSION["facultadCab"]:"No hay información"); ?></td>
+                                          <th scope="row">Facultad</th><input type="hidden" name="facultad" value="<?=$datos_docente["facultad"]?>" />
+                                          <td><?= (isset($datos_docente["facultad"])? $datos_docente["facultad"]:"No hay información"); ?></td>
                                         </tr>
                                         <tr>
-                                          <th scope="row">Programa Profesional</th>
-                                          <td><?= (isset($_SESSION["escuelaCab"])? $_SESSION["escuelaCab"] :"No hay información"); ?></td>
+                                          <th scope="row">Programa Profesional</th><input type="hidden" name="escuela" value="<?=$datos_docente["escuela"]?>" />
+                                          <td><?= (isset($datos_docente["escuela"])? $datos_docente["escuela"] :"No hay información"); ?></td>
                                         </tr>
                                         <tr>
-                                          <th scope="row">Curso</th>
-                                          <td class="h5"><b><?= (isset($_SESSION["asignaturaCab"])? $_SESSION["asignaturaCab"]:"No hay información"); ?></b></td>
+                                          <th scope="row">Curso</th><input type="hidden" name="asignatura" value="<?=$datos_docente["asignatura"]?>" />
+                                          <td class="h5"><b><?= (isset($datos_docente["asignatura"])? $datos_docente["asignatura"]:"No hay información"); ?></b></td>
                                         </tr>
                                         <tr>
-                                          <th scope="row">Código</th>
-                                          <td><?= (isset($_SESSION["codasignaturaCAb"])? $_SESSION["codasignaturaCAb"]:"No hay información"); ?></td>
+                                          <th scope="row">Código</th><input type="hidden" name="codasig" value="<?=$datos_docente["codasig"]?>" />
+                                          <td><?= (isset($datos_docente["codasig"])? $datos_docente["codasig"]:"No hay información"); ?></td>
                                         </tr>
                                         <tr>
-                                          <th scope="row">Grupo</th>
-                                          <td><?= (isset($_SESSION["grupo"])? $_SESSION["grupo"]:"No hay información"); ?></td>
+                                          <th scope="row">Grupo</th><input type="hidden" name="grupo" value="<?=$datos_docente["grupo"]?>"  />
+                                                                    <input type="hidden" name="aula" value="<?=$datos_docente["aula"]?>"  />
+                                                                    <input type="hidden" name="hora_inicial" value="<?=$datos_docente["hora_ini"]?>"  />
+                                                                    <input type="hidden" name="hora_final" value="<?=$datos_docente["hora_fin"]?>"  />
+                                                                    <input type="hidden" name="dia" value="<?=$datos_docente["dia"]?>"  />
+                                                                    <input type="hidden" name="correo_docente" value="<?=$email_docente?>"  />
+                                          <td><?= (isset($datos_docente["grupo"])? $datos_docente["grupo"]:"No hay información"); ?></td>
                                         </tr>
                                         <tr>
-                                          <th scope="row">Semana</th>
-                                          <td><?php $semanas=date("W"); $_SESSION["semana"]= $semanas -36;  echo (isset($_SESSION["semana"])? $_SESSION["semana"]:"No hay información"); ?></td>
+                                          <th scope="row">Semana</th><input type="hidden" name="semana" value="<?=$datos_docente["semana"]?>"  />
+                                          <td><?php echo (isset($datos_docente["semana"])? $datos_docente["semana"]:"No hay información"); ?></td>
                                         </tr>
                                         <tr>
                                           <th scope="row">Tema de avance</th>
@@ -133,13 +116,8 @@
                                             <div class="block1">
                                               <div class="block2">
                                                 <select id="from" name="check_list_tema[]" multiple required>
-                                                      <option value="<?= (isset($tema_semana)? $tema_semana:"No hay seleccion de temas. Verifique")?>"> <?= (isset($tema_semana)? $tema_semana:"No hay seleccion de temas") ?></option>';
-                                                      <?php for($i = 0; $i < $_SESSION["row_cnt_temas_cap"]; $i++){
-                                                              foreach ($temasilabico as $showtemasilabico) { ?>
-                                                                  <option value="<?= (isset($showtemasilabico[$i]["tema"])? $showtemasilabico[$i]["tema"]:"No hay seleccion de temas. Verifique")?>"> <?= (isset($showtemasilabico[$i]["tema"])? $showtemasilabico[$i]["tema"]:"No hay seleccion de temas") ?></option>';
-                                                                  <option style="font-size: 1%; background-color: #858796;" disabled>&nbsp;</option>
-                                                      <?php   }
-                                                            }?>
+                                                      <option value="<?= (isset($tema_semana)? $tema_semana:"No hay seleccion de temas :(). Verifique")?>"> <?= (isset($tema_semana)? $tema_semana:"No tiene temas comuniquese con DUFA") ?></option>';
+
                                                   </select>
                                                 </div>
                                               </div>
@@ -179,9 +157,10 @@
  </div>
 
 <?php
-  require_once("vista/footer.php");
-}else{
-  header("Location:".Conectar::ruta_aulavirtual());
-  exit();
-}
+    require_once("vista/footer.php");
+  }else{
+    //no hay value o el correo cifrado
+    header("Location:".Conectar::ruta()."mensaje.php?op=1");
+  }
+
 ?>
