@@ -53,6 +53,10 @@
                                                               echo '<p class="lead text-gray-800 mb-5">Lo sentimos, No se encuentra información de su curso, comunicarse con el Administrador de SISCAD.</p>
                                                                       <p class="text-gray-500 mb-0"></p>';
                                                               break;
+                                                          case '5':
+                                                              echo '<p class="lead text-gray-800 mb-5">Lo sentimos, No se encuentra idoc. comunicarse con el Administrador</p>
+                                                                      <p class="text-gray-500 mb-0"></p>';
+                                                              break;
 
                                                           default:
                                                             echo '<p class="lead text-gray-800 mb-5">Lo sentimos, ahora no tiene una clase programada.</p>

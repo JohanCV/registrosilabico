@@ -8,7 +8,9 @@
         $asistencia_class = new Asistencia();
 
         $semanas=date("W");
-        $semanarecorrida = 36;
+
+        //verificacion de si es curso anual_checkbox
+        $semanarecorrida = 16;
 
         $email_md5 = $_GET["value"];
         $email_docente = $user_class->getEmailMd5_login($email_md5); //var_dump($email); die;
@@ -111,7 +113,7 @@
                                             <th scope="row" >Semana</th><input type="hidden" name="semana" value="<?=$datos_docente["semana"]?>"  />
                                             <td><?php echo (isset($datos_docente["semana"])? $datos_docente["semana"]:"No hay información"); ?>
                                               <b id="anual_checkbox">
-                                                  <input type="checkbox" name="activo_anual_chkBox" value="activo_anual" id="activo_anual">
+                                                  <input type="checkbox" name="activo_anual_chkBox_marcado" value="activo_anual_marcado" id="activo_anual_marcado" checked>
                                                   <label for="yes">Marcar si es Curso Anual</label></b>
                                             </td>
                                         </tr>

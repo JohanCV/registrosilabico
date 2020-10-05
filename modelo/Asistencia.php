@@ -221,7 +221,7 @@
                 if (isset($correo) && !empty($correo) && isset($idtemaregistrado) && !empty($idtemaregistrado) && isset($facu) && !empty($facu) && isset($escu) && !empty($escu) && isset($asig) && !empty($asig)
                     && isset($codasig) && !empty($codasig) && isset($grupo) && !empty($grupo) && isset($horaini) && !empty($horaini)) {
 
-                    $sql="SELECT porcentaje, tema FROM `asistencia_cabecera` WHERE `facultad` = ? AND `programa` = ? AND `asignatura` = ? AND `codasig`= ?
+                    $sql="SELECT * FROM `asistencia_cabecera` WHERE `facultad` = ? AND `programa` = ? AND `asignatura` = ? AND `codasig`= ?
                           AND `grupo` = ? AND `hora_ini`= ? AND `fecha`=CURDATE() AND `correo`= ? AND id =?";
 
                     $sql=$conectar->prepare($sql);
@@ -330,7 +330,7 @@
     		                $sql->bindValue(3, $_SESSION["indentificacion"]);
                         $sql->bindValue(4, $idtemaup);
                         $resultado = $sql->execute();    //var_dump($sql->execute()); //die();
-                        
+
                     //echo"se actualizao exitosamente";
                     if ($resultado) {
                         $resultado = true;

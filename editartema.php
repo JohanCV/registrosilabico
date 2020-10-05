@@ -9,6 +9,7 @@
   $semanas=date("W");
 
   if (isset($_GET["value"]) AND !empty($_GET["value"]) AND isset($_GET["idoc"]) AND  !empty($_GET["idoc"])) {
+
       $email_md5 = $_GET["value"];
       $idoc = $_GET["idoc"];          //var_dump($_GET["idoc"]);
       $url_accion = "temaregistrado.php?iddocupdate=".$idoc."";
@@ -24,6 +25,15 @@
           $codasig = $datos_docente["codasig"];
           $grupo = $datos_docente["grupo"];
           $horaini = $datos_docente["hora_ini"];
+          $horafin = $datos_docente["hora_fin"];
+          //start verificacion de idoc existe en la bd,si no existe mandarle un mensaje
+          $bool_idoc = $asistencia_class->getIdCabecera($_SESSION["indentificacion"],$datos_docente["codasig"], $datos_docente["grupo"],$datos_docente["escuela"],$datos_docente["hora_ini"], $datos_docente["hora_fin"]);
+          //var_dump($bool_idoc);
+          if ($bool_idoc == null) {
+              header("Location:".Conectar::ruta()."mensaje.php?op=5");
+          }
+          //end verificacion
+
           if (isset($email) && !empty($email) && isset($facu) && !empty($facu) && isset($escu) && !empty($escu) && isset($asig) && !empty($asig)
               && isset($codasig) && !empty($codasig) && isset($grupo) && !empty($grupo) && isset($horaini) && !empty($horaini)) {
 
@@ -32,10 +42,21 @@
 
               if (isset($porcentaje_editar)) {
                   foreach ($porcentaje_editar as $showporcentaje_editar) {
+                        $nombre = $showporcentaje_editar["nombres"];
+                        $facultad = $showporcentaje_editar["facultad"];
+                        $escuela= $showporcentaje_editar["programa"];
+                        $asignatura = $showporcentaje_editar["asignatura"];
+                        $codasig = $showporcentaje_editar["codasig"];
+                        $grupo = $showporcentaje_editar["grupo"];
+                        $horainicial = $showporcentaje_editar["hora_ini"];
+                        $horafinal = $showporcentaje_editar["hora_fin"];
+                        $dia = $showporcentaje_editar["dia"];
+                        $fecha_registro = $showporcentaje_editar["fecha"];
+                        $semana = $showporcentaje_editar["semana"];
                         $porcentaje_editarn = $showporcentaje_editar["porcentaje"]; //var_dump($porcentaje_editarn);
                         $tema_editarn["tema"] =  $showporcentaje_editar["tema"];
                   }
-              }
+              }//var_dump($nombre);
           }else {
               echo "estan mal los datos para obtener el tema y porcentaje ";
           }
@@ -100,7 +121,7 @@
                                         </tr>
                                         <tr>
                                           <th scope="row">Semana</th><input type="hidden" name="semana" value="<?=$datos_docente["semana"]?>"  />
-                                          <td><?php echo (isset($datos_docente["semana"])? $datos_docente["semana"]:"No hay información"); ?></td>
+                                          <td><?php echo (isset($semana)? $semana:"No hay información"); ?></td>
                                         </tr>
                                         <tr>
                                           <th scope="row">Tema de avance</th>
